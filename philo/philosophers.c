@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 19:40:19 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/22 22:33:14 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/07/22 22:55:58 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ void	*philosopher_routine(void *philosopher_data)
 	t_philosopher	*philosopher;
 
 	philosopher = (t_philosopher *)philosopher_data;
-	(void)philosopher->party->guard;
+/* 	printf("Before lock\n");
+	pthread_mutex_lock(&(philosopher->party->guard));
+	printf("Before unlock\n");
+	pthread_mutex_unlock(&(philosopher->party->guard)); */
 	printf("Thread [");
 	print_thread_id(philosopher->thread);
 	printf("] routine is on\n");
@@ -139,6 +142,7 @@ void	clean_up(t_party	*party)
 		pthread_mutex_destroy(&(party->forks[i]));
 		i++;
 	}
+	pthread_mutex_destroy(&(party->guard));
 	free(party->philosophers);
 	free(party->forks);
 }
