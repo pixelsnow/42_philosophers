@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lclerc <lclerc@student.42.fr>              +#+  +:+       +#+         #
+#    By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/22 15:37:53 by lclerc            #+#    #+#              #
-#    Updated: 2023/07/22 17:26:15 by lclerc           ###   ########.fr        #
+#    Updated: 2023/07/22 20:09:28 by vvagapov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 DEBUG_FLAGS = -g -fsanitize=address -static-libsan
 THREAD_DEBUG_FLAG = -g -fsanitize=thread -static-libsan
 COMPILE = $(CC) $(CFLAGS)
-SRCS = philo.c
+SRCS = philosophers.c
 OBJ = $(SRCS:%.c=%.o)
 INC = philosophers.h
 
