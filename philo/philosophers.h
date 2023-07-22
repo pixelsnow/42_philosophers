@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 17:40:02 by lclerc            #+#    #+#             */
-/*   Updated: 2023/07/22 20:07:32 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/07/22 22:09:40 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,13 @@ typedef struct s_party	t_party;
 
 typedef struct s_philosopher
 {
+	pthread_t 			thread;
+	pthread_mutex_t		*fork_own;
+	pthread_mutex_t		*fork_borrowed;
+	int					dead;
 	int					meal_count;
-	pthread_t 			philo_thread;
 	unsigned long long	time_last_ate;
+	t_party				*party;
 }						t_philosopher;
 
 typedef struct s_party
@@ -36,6 +40,7 @@ typedef struct s_party
 	unsigned int		number_of_times_each_philosopher_must_eat;
 	t_philosopher		*philosophers;
 	pthread_mutex_t		*forks;
+	pthread_mutex_t		guard;
 }						t_party;
 
 typedef enum e_return_value
