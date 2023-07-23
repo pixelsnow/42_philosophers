@@ -3,18 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+         #
+#    By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/22 15:37:53 by lclerc            #+#    #+#              #
-#    Updated: 2023/07/22 22:58:01 by vvagapov         ###   ########.fr        #
+#    Updated: 2023/07/23 20:32:29 by lclerc           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #******************************************************************************#
-# $@ and $^ are special variables that represent the target and the first
-# dependency:
-# - $@ represents the target, the file being built.
-# - $< represents the first dependency, the file required to build the target.
+# $@ and $^ are special variables that represent the target and the first	   #
+# dependency:																   #
+# - $@ represents the target, the file being built.							   #
+# - $< represents the first dependency, the file required to build the target. #
 #******************************************************************************#
 
 NAME = philo
@@ -23,12 +23,13 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 DEBUG_FLAGS = -g -fsanitize=address -static-libsan
 THREAD_DEBUG_FLAG = -g -fsanitize=thread -static-libsan
 COMPILE = $(CC) $(CFLAGS)
-SRCS = philosophers.c
+SRCS =	philosophers.c \
+		input.c
 OBJ = $(SRCS:%.c=%.o)
 INC = philosophers.h
 
 #******************************************************************************#
-# Main rule
+# Main rule																	   #
 #******************************************************************************#
 
 all: $(NAME)
@@ -40,7 +41,7 @@ $(NAME): $(OBJ)
 	$(COMPILE) -I $(INC) $< -c -o $@
 
 #******************************************************************************#
-# Debug rules
+# Debug rules																   #
 #******************************************************************************#
 
 # Rule to compile the program with address sanitizer
@@ -52,7 +53,7 @@ thread_debug: CFLAGS += $(THREAD_DEBUG_FLAG)
 thread_debug: all
 
 #******************************************************************************#
-# Cleaning - Deletion
+# Cleaning - Deletion														   #
 #******************************************************************************#
 
 clean:
@@ -64,6 +65,6 @@ fclean: clean
 re: fclean all
 
 #******************************************************************************#
-.PHONY: all clean fclean re debug thread_debug
+.PHONY: all clean fclean re debug thread_debug								   #
 #******************************************************************************#
 
