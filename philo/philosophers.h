@@ -14,7 +14,7 @@ typedef struct s_philosopher
 	pthread_mutex_t		*fork_own;
 	pthread_mutex_t		*fork_borrowed;
 	int					meal_count; // chenge to meals_left?
-	unsigned int		index; // TODO
+	unsigned int		index;
 	unsigned long long	time_last_ate;
 	t_party				*party;
 }						t_philosopher;
@@ -30,11 +30,12 @@ typedef struct s_party
 	pthread_t 			monitoring_thread; // TODO
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		guard;
-	pthread_mutex_t		printing;
+	pthread_mutex_t		printing; // TODO include everywhere
 	pthread_mutex_t		dying;
 	pthread_mutex_t		reporting_enough_meals;
+	pthread_mutex_t		party_going_on;
 	int					someone_dead;
-	int					number_of_philosophers_fed;
+	unsigned int		number_of_philosophers_fed;
 }						t_party;
 
 typedef enum e_return_value
@@ -43,6 +44,6 @@ typedef enum e_return_value
 	ERROR,
 }						t_return_value;
 
-t_return_value    parse_args(t_party *party, int argc, char argv);
+t_return_value    parse_args(t_party *party, int argc, char **argv);
 
 #endif
