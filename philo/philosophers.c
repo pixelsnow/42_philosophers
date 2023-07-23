@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 19:40:19 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/22 22:55:58 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/07/23 13:59:04 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 int	parse_args(t_party	*party, int ac, char **av)
 {
+	if (ac < 5 || ac > 6)
+		return (ERROR);
 	party->number_of_philosophers = atoi(av[1]);
 	party->time_to_die = atoi(av[2]);
 	party->time_to_eat = atoi(av[3]);
