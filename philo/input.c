@@ -18,7 +18,7 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 }
 
 static t_return_value	store_arg_if_validated(t_party *party, char *string,
-		int argument)
+		int argument, int argc)
 {
 	int	validated_value;
 
@@ -34,7 +34,9 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 	else if (argument == 4)
 		party->time_to_sleep = validated_value;
 	else if (argument == 5)
-		party->number_of_meals_needed = (int)validated_value;
+		party->number_of_meals = (int)validated_value;
+	if (argc = 5)
+		party->number_of_meals = -1;
 	return (SUCCESS);
 }
 
@@ -53,9 +55,7 @@ static t_return_value	argument_number_check(argc)
 }
 
 /**
-
-
-	* @brief Check if number of arguments is correct and are positive numerical values
+ * @brief Check if number of arguments is correct and are positive numerical values
  * 
  * @param party Struct organizing the party
  * @param argc
@@ -71,7 +71,7 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 		return (ERROR);
 	while (index < argc)
 	{
-		if (store_arg_if_validated(party, argv[index], index) == ERROR &&
+		if (store_arg_if_validated(party, argv[index], index, argc) == ERROR &&
 			argv[index] != '\0')
 		{
 			printf("Argument must be positive number\n");
