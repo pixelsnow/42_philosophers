@@ -31,10 +31,15 @@ void print_thread_id(pthread_t id)
 void	*philosopher_routine(void *philosopher_data)
 {
 	t_philosopher	*philosopher;
+	int				*idptr;
 
 	philosopher = (t_philosopher *)philosopher_data;
+	idptr = (int *)&philosopher->thread;
+	printf("Thread [");
+	printf("%d", *idptr);
+	//print_thread_id(philosopher->thread);
+	printf("] routine on\n");
 	printf("time_last_ate: %llu\n", philosopher->time_last_ate);
-	printf("dead: %i\n", philosopher->dead);
 	printf("number_of_philosophers: %i\n",
 		philosopher->party->number_of_philosophers);
 	printf("Before lock\n");
@@ -59,7 +64,7 @@ void	prepare_philosopher(t_party	*party, unsigned int i)
 	party->philosophers[i].fork_borrowed
 		= &party->forks[(i + 1) % party->number_of_philosophers];
 	party->philosophers[i].meal_count = 10;
-	party->philosophers[i].dead = 1;
+	party->philosophers[i].dead = 0;
 	party->philosophers[i].party = party;
 }
 
@@ -70,8 +75,8 @@ void	start_philosopher(t_party	*party, unsigned int i)
 	pthread_create(
 		&(party->philosophers[i].thread), 
 		NULL, 
-		philosopher_routine(&(party->philosophers[i])),
-		&(party->philosophers[i]));
+		philosopher_routine,
+		(void *)&(party->philosophers[i]));
 }
 
 int prepare_party(t_party	*party)
@@ -113,9 +118,8 @@ int prepare_party(t_party	*party)
 		printf("i++\n");
 		i++;
 	}
-	printf("quit_gracefully...\n");
+	printf("unlocking guard...\n");
 	pthread_mutex_unlock(&(party->guard));
-	
 	if (gettimeofday(&tp, NULL))
 		return (quit_gracefully(party));
 	
