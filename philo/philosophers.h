@@ -25,10 +25,12 @@ typedef struct s_party
 	unsigned long long	time_to_die;
 	unsigned long long	time_to_eat;
 	unsigned long long	time_to_sleep;
-	unsigned int		number_of_times_each_philosopher_must_eat;
+	int					number_of_meals;
 	t_philosopher		*philosophers;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		guard;
+	pthread_mutex_t		printing;
+	int					someone_dead;
 }						t_party;
 
 typedef enum e_return_value
