@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philosophers.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/22 19:40:19 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/23 14:15:07 by vvagapov         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers.h"
 #include <stdlib.h>
 
@@ -45,10 +33,14 @@ void	*philosopher_routine(void *philosopher_data)
 	t_philosopher	*philosopher;
 
 	philosopher = (t_philosopher *)philosopher_data;
-/* 	printf("Before lock\n");
+	printf("time_last_ate: %llu\n", philosopher->time_last_ate);
+	printf("dead: %i\n", philosopher->dead);
+	printf("number_of_philosophers: %i\n",
+		philosopher->party->number_of_philosophers);
+	printf("Before lock\n");
 	pthread_mutex_lock(&(philosopher->party->guard));
 	printf("Before unlock\n");
-	pthread_mutex_unlock(&(philosopher->party->guard)); */
+	pthread_mutex_unlock(&(philosopher->party->guard));
 	printf("Thread [");
 	print_thread_id(philosopher->thread);
 	printf("] routine is on\n");
@@ -66,8 +58,9 @@ void	prepare_philosopher(t_party	*party, unsigned int i)
 	party->philosophers[i].fork_own = &party->forks[i];
 	party->philosophers[i].fork_borrowed
 		= &party->forks[(i + 1) % party->number_of_philosophers];
-	party->philosophers[i].meal_count = 0;
-	party->philosophers[i].dead = 0;
+	party->philosophers[i].meal_count = 10;
+	party->philosophers[i].dead = 1;
+	party->philosophers[i].party = party;
 }
 
 void	start_philosopher(t_party	*party, unsigned int i)
@@ -92,7 +85,6 @@ int prepare_party(t_party	*party)
 			* party->number_of_philosophers);
 	party->forks = malloc(sizeof(pthread_mutex_t)
 			* party->number_of_philosophers);
-
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
@@ -105,18 +97,6 @@ int prepare_party(t_party	*party)
 		prepare_philosopher(party, i);
 		i++;
 	}
-	pthread_mutex_init(&(party->guard), NULL);
-	pthread_mutex_lock(&(party->guard));
-	i = 0;
-	while (i < party->number_of_philosophers)
-	{
-		start_philosopher(party, i);
-		i++;
-	}
-	pthread_mutex_unlock(&(party->guard));
-	printf("getting time...\n");
-	if (gettimeofday(&tp, NULL))
-		return (quit_gracefully(party));
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
@@ -124,6 +104,21 @@ int prepare_party(t_party	*party)
 		printf("time is %llu\n", party->philosophers[i].time_last_ate);
 		i++;
 	}
+	pthread_mutex_init(&(party->guard), NULL);
+	pthread_mutex_lock(&(party->guard));
+	i = 0;
+	while (i < party->number_of_philosophers)
+	{
+		start_philosopher(party, i);
+		printf("i++\n");
+		i++;
+	}
+	printf("quit_gracefully...\n");
+	pthread_mutex_unlock(&(party->guard));
+	
+	if (gettimeofday(&tp, NULL))
+		return (quit_gracefully(party));
+	
 	return (SUCCESS);
 }
 
@@ -138,6 +133,12 @@ void	clean_up(t_party	*party)
 	unsigned int	i;
 
 	printf("clean_up\n");
+	i = 0;
+	while (i < party->number_of_philosophers)
+	{
+		pthread_join(party->philosophers[i].thread, NULL);
+		i++;
+	}
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
