@@ -11,7 +11,7 @@ int	parse_args(t_party	*party, int ac, char **av)
 	party->time_to_sleep = atoi(av[4]);
 	// What if 0?
 	if (ac > 5)
-		party->number_of_meals = atoi(av[5]);
+		party->number_of_meals_needed = atoi(av[5]);
 	return (SUCCESS);
 }
 
@@ -21,16 +21,11 @@ int	quit_gracefully(t_party	*party)
 	return (ERROR);
 }
 
-unsigned long long	get_current_time(t_party *party)
+unsigned long long	get_current_time(void)
 {
 	struct timeval tp;
 
-	if (gettimeofday(&tp, NULL))
-	{
-		quit_gracefully(party);
-		return (0);
-		// Confusing because 0 not 1, double check
-	}
+	gettimeofday(&tp, NULL);
 	return (tp.tv_sec * 1000000 + tp.tv_usec);
 }
 
@@ -38,6 +33,7 @@ void	*philosopher_routine(void *philosopher_data)
 {
 	t_philosopher	*philosopher;
 	int				*idptr;
+	unsigned long long	curr_time;
 
 	philosopher = (t_philosopher *)philosopher_data;
 	idptr = (int *)&philosopher->thread;
@@ -51,23 +47,26 @@ void	*philosopher_routine(void *philosopher_data)
 	pthread_mutex_lock(&(philosopher->party->guard));
 	printf("Before unlock\n");
 	pthread_mutex_unlock(&(philosopher->party->guard));
-	/* while (1)
+	while (1)
 	{
-		if ()
+		curr_time = get_current_time();
+		if (curr_time - philosopher->time_last_ate
+			> philosopher->party->time_to_die)
+		{
+			pthread_mutex_lock(&(philosopher->party->dying));
+			philosopher->party->someone_dead = 1;
+			pthread_mutex_unlock(&(philosopher->party->dying));
+		}
 		if (philosopher->party->someone_dead)
 		{
 			break;
 		}
-		if (philosopher->party->number_of_meals >= 0
-			&& philosopher->meal_count >= philosopher->party->number_of_meals)
+		if (philosopher->party->number_of_meals_needed >= 0
+			&& philosopher->meal_count >= philosopher->party->number_of_meals_needed)
 		{
 			break;
 		}
-
-	} */
-	printf("Thread [");
-	printf("%d", (int)philosopher->thread);
-	printf("] routine is on\n");
+	}
 	pthread_mutex_lock(philosopher->fork_own);
 	printf("Thread [");
 	printf("%d", (int)philosopher->thread);
@@ -82,8 +81,7 @@ void	prepare_philosopher(t_party	*party, unsigned int i)
 	party->philosophers[i].fork_own = &party->forks[i];
 	party->philosophers[i].fork_borrowed
 		= &party->forks[(i + 1) % party->number_of_philosophers];
-	party->philosophers[i].meal_count = 10;
-	party->philosophers[i].dead = 0;
+	party->philosophers[i].meal_count = 0;
 	party->philosophers[i].party = party;
 }
 
@@ -91,6 +89,7 @@ void	start_philosopher(t_party	*party, unsigned int i)
 {
 	// REMEMEBER: returns -1 on error, 0 on success
 	printf("start_philosopher\n");
+	//TODO: add fail check
 	pthread_create(
 		&(party->philosophers[i].thread), 
 		NULL, 
@@ -131,7 +130,7 @@ int prepare_party(t_party	*party)
 	// TODO: add print mutex
 	
 	// Start all threads simultaneously
-	
+	// Make this a separate function maybe
 	pthread_mutex_lock(&(party->guard));
 	i = 0;
 	while (i < party->number_of_philosophers)
@@ -144,9 +143,7 @@ int prepare_party(t_party	*party)
 	pthread_mutex_unlock(&(party->guard));
 
 	// Save starting timestamps
-	curr_time = get_current_time(party);
-	if (!curr_time)
-		return (quit_gracefully(party));
+	curr_time = get_current_time();
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
