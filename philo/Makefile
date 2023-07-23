@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+         #
+#    By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/22 15:37:53 by lclerc            #+#    #+#              #
-#    Updated: 2023/07/23 20:32:29 by lclerc           ###   ########.fr        #
+#    Updated: 2023/07/23 21:58:58 by vvagapov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,13 @@ DEBUG_FLAGS = -g -fsanitize=address -static-libsan
 THREAD_DEBUG_FLAG = -g -fsanitize=thread -static-libsan
 COMPILE = $(CC) $(CFLAGS)
 SRCS =	philosophers.c \
-		input.c
+		input.c \
+		utils.c \
+		party_preparations.c \
+		start_threads.c \
+		monitoring_routine.c \
+		philo_routine.c \
+		cleanup.c
 OBJ = $(SRCS:%.c=%.o)
 INC = philosophers.h
 
