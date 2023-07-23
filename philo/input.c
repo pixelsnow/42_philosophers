@@ -1,21 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   input.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/22 20:16:58 by lclerc            #+#    #+#             */
-/*   Updated: 2023/07/23 17:10:18 by lclerc           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "philosophers.h"
 
-
 static unsigned long long	ascii_to_positive_int(const char *str)
 {
-	
 	unsigned long long	result;
 
 	result = 0;
@@ -26,17 +14,33 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 	}
 	if (*str != '\0')
 		return (-42);
-	return (((unsigned long long))result);
+	return ((unsigned long long)result);
 }
 
-static t_return_value	validate_digit(char *string)
+static t_return_value	store_arg_if_validated(t_party *party, char *string,
+		int argument)
 {
-	int	value;
-	int	i;
+	int	validated_value;
 
-	value = ascii_to_positive_int(string);
-	if (value = -42)
+	validated_value = ascii_to_positive_int(string);
+	if (validated_value == -42)
 		return (ERROR);
+	else if (argument == 1)
+		party->number_of_philosophers = validated_value;
+	else if (argument == 2)
+		party->time_to_die = validated_value;
+	else if (argument == 3)
+		party->time_to_eat = validated_value;
+	else if (argument == 4)
+		party->time_to_sleep = validated_value;
+	else if (argument == 5)
+		party->number_of_meals_needed = (int)validated_value;
+	return (SUCCESS);
+}
+
+static void print_philo_usage(void)
+{
+	printf("Usage: ./philo\tnumber_of_philosophers\n\t\ttime_to_die\t(millisecond, ms)\n\t\ttime_to_eat\t(ms)\n\t\ttime_to_sleep\t(ms)\n\t\t[number_of_times_each_philosopher_must_eat]\n");
 }
 
 static t_return_value	argument_number_check(argc)
@@ -44,14 +48,14 @@ static t_return_value	argument_number_check(argc)
 	if (argc == 5 || argc == 6)
 		return (SUCCESS);
 	printf("Improper amount of argument\n");
-	printf("Usage: ./philo number_of_philosophers time_to_die (millisecond, ms) \
-	time_to_eat (ms) time_to_sleep(ms) \
-	[number_of_times_each_philosopher_must_eat]\n");
+	print_philo_usage();
 	return (ERROR);
 }
 
 /**
- * @brief Check if number of arguments is correct and are positive numerical values
+
+
+	* @brief Check if number of arguments is correct and are positive numerical values
  * 
  * @param party Struct organizing the party
  * @param argc
@@ -60,22 +64,21 @@ static t_return_value	argument_number_check(argc)
  */
 t_return_value	parse_args(t_party *party, int argc, char **argv)
 {
-	int	i;
+	int	index;
 
-	i = 1;
-	if (argument_number_check(argc) == SUCCESS)
+	index = 1;
+	if (argument_number_check(argc) == ERROR)
+		return (ERROR);
+	while (index < argc)
 	{
-		while (i < argc)
+		if (store_arg_if_validated(party, argv[index], index) == ERROR &&
+			argv[index] != '\0')
 		{
-			if (validate_digit(argv[i]) != SUCCESS && argv[i] != '\0')
-			{
-				printf("Argument must be positive number\n");
-				return (ERROR);
-			}
-			
-		i++;
+			printf("Argument must be positive number\n");
+			print_philo_usage();
+			return (ERROR);
 		}
-		return (SUCCESS);
+		index++;
 	}
-	return(ERROR);
+	return (SUCCESS);
 }
