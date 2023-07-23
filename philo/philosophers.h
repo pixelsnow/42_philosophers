@@ -32,7 +32,9 @@ typedef struct s_party
 	pthread_mutex_t		guard;
 	pthread_mutex_t		printing;
 	pthread_mutex_t		dying;
+	pthread_mutex_t		reporting_enough_meals;
 	int					someone_dead;
+	int					number_of_philosophers_fed;
 }						t_party;
 
 typedef enum e_return_value
@@ -40,5 +42,7 @@ typedef enum e_return_value
 	SUCCESS,
 	ERROR,
 }						t_return_value;
+
+t_return_value    parse_args(t_party *party, int argc, char argv);
 
 #endif

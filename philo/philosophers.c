@@ -1,7 +1,7 @@
 #include "philosophers.h"
 #include <stdlib.h>
 
-int	parse_args(t_party	*party, int ac, char **av)
+int	parse_args_old(t_party	*party, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
 		return (ERROR);
@@ -49,6 +49,7 @@ void	*philosopher_routine(void *philosopher_data)
 	pthread_mutex_unlock(&(philosopher->party->guard));
 	while (1)
 	{
+		// Check time since last meal and die if starved
 		curr_time = get_current_time();
 		if (curr_time - philosopher->time_last_ate
 			> philosopher->party->time_to_die)
@@ -57,13 +58,19 @@ void	*philosopher_routine(void *philosopher_data)
 			philosopher->party->someone_dead = 1;
 			pthread_mutex_unlock(&(philosopher->party->dying));
 		}
+		
+		// If there was a death, stop
 		if (philosopher->party->someone_dead)
 		{
 			break;
 		}
+		// If this philo ate enough, stop
 		if (philosopher->party->number_of_meals_needed >= 0
 			&& philosopher->meal_count >= philosopher->party->number_of_meals_needed)
 		{
+			pthread_mutex_lock(&(philosopher->party->reporting_enough_meals));
+			philosopher->party->number_of_philosophers_fed += 1;
+			pthread_mutex_unlock(&(philosopher->party->reporting_enough_meals));
 			break;
 		}
 	}
@@ -72,6 +79,31 @@ void	*philosopher_routine(void *philosopher_data)
 	printf("%d", (int)philosopher->thread);
 	printf("] took own fork\n");
 	pthread_mutex_unlock(philosopher->fork_own);
+	return (NULL);
+}
+
+void	*monitoring_routine(void *party_data)
+{
+	t_party	*party;
+
+	party = (t_party *)party_data;
+	printf("Monitoring thread is on\n");
+	while (1)
+	{
+		pthread_mutex_lock(&(party->dying));
+		if (party->someone_dead)
+		{
+			printf("Monitoring detected DEATH\n");
+			pthread_mutex_unlock(&(party->dying));
+			break;
+		}
+		else
+			pthread_mutex_unlock(&(party->dying));
+		/* if (everyone_ate_enough(party))
+		{
+			
+		} */
+	}
 	return (NULL);
 }
 
@@ -89,12 +121,23 @@ void	start_philosopher(t_party	*party, unsigned int i)
 {
 	// REMEMEBER: returns -1 on error, 0 on success
 	printf("start_philosopher\n");
+	party->philosophers[i].index = i;
 	//TODO: add fail check
 	pthread_create(
 		&(party->philosophers[i].thread), 
 		NULL, 
 		philosopher_routine,
 		(void *)&(party->philosophers[i]));
+}
+
+void	start_monitoring(t_party	*party)
+{
+	printf("monitor_party\n");
+	pthread_create(
+		&(party->monitoring_thread), 
+		NULL, 
+		monitoring_routine,
+		(void *)&(party->monitoring_thread));
 }
 
 int prepare_party(t_party	*party)
@@ -106,6 +149,7 @@ int prepare_party(t_party	*party)
 	// TODO: protect mallocs
 	printf("prepare_party\n");
 	party->someone_dead = 0;
+	party->number_of_philosophers_fed = 0;
 	party->philosophers = malloc(sizeof(t_philosopher)
 			* party->number_of_philosophers);
 	party->forks = malloc(sizeof(pthread_mutex_t)
@@ -127,6 +171,9 @@ int prepare_party(t_party	*party)
 		i++;
 	}
 	pthread_mutex_init(&(party->guard), NULL);
+	pthread_mutex_init(&(party->printing), NULL);
+	pthread_mutex_init(&(party->dying), NULL);
+	pthread_mutex_init(&(party->reporting_enough_meals), NULL);
 	// TODO: add print mutex
 	
 	// Start all threads simultaneously
@@ -154,11 +201,7 @@ int prepare_party(t_party	*party)
 	return (SUCCESS);
 }
 
-void	monitor_party(t_party	*party)
-{
-	printf("monitor_party\n");
-	(void) party;
-}
+
 
 void	clean_up(t_party	*party)
 {
@@ -178,6 +221,9 @@ void	clean_up(t_party	*party)
 		i++;
 	}
 	pthread_mutex_destroy(&(party->guard));
+	pthread_mutex_destroy(&(party->printing));
+	pthread_mutex_destroy(&(party->dying));
+	pthread_mutex_destroy(&(party->reporting_enough_meals));
 	free(party->philosophers);
 	free(party->forks);
 }
@@ -186,7 +232,7 @@ int	main(int ac, char **av)
 {
 	t_party	party;
 	
-	if (parse_args(&party, ac, av))
+	if (parse_args_old(&party, ac, av))
 	{
 		return (ERROR);
 	}
@@ -194,7 +240,7 @@ int	main(int ac, char **av)
 	{
 		return (ERROR);
 	}
-	monitor_party(&party);
+	//monitor_party(&party);
 	clean_up(&party);
 	return(SUCCESS);
 }
