@@ -1,33 +1,47 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/22 20:16:58 by lclerc            #+#    #+#             */
+/*   Updated: 2023/07/23 17:10:18 by lclerc           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
-int	ft_atoi(const char *str)
+
+static unsigned long long	ascii_to_positive_int(const char *str)
 {
-	long	result;
-	int		sign;
+	
+	unsigned long long	result;
 
 	result = 0;
-	sign = 1;
-	while ((*str == 32) || ((*str >= 9) && (*str <= 13)))
-		str++;
-	if (*str == '-')
-		sign = -1;
-	if (*str == '+' || *str == '-')
-		str++;
 	while (*str >= '0' && *str <= '9')
 	{
 		result = result * 10 + *str - '0';
 		str++;
 	}
-	return ((int)(result * sign));
-}
-t_return_value	validate_digit(char *string)
-{
-
+	if (*str != '\0')
+		return (-42);
+	return (((unsigned long long))result);
 }
 
-t_return_value	argument_number_check(argc)
+static t_return_value	validate_digit(char *string)
 {
-	if (argc == 4 || argc == 5)
+	int	value;
+	int	i;
+
+	value = ascii_to_positive_int(string);
+	if (value = -42)
+		return (ERROR);
+}
+
+static t_return_value	argument_number_check(argc)
+{
+	if (argc == 5 || argc == 6)
 		return (SUCCESS);
 	printf("Improper amount of argument\n");
 	printf("Usage: ./philo number_of_philosophers time_to_die (millisecond, ms) \
@@ -36,6 +50,14 @@ t_return_value	argument_number_check(argc)
 	return (ERROR);
 }
 
+/**
+ * @brief Check if number of arguments is correct and are positive numerical values
+ * 
+ * @param party Struct organizing the party
+ * @param argc
+ * @param argv 
+ * @return	SUCCESS or ERROR
+ */
 t_return_value	parse_args(t_party *party, int argc, char **argv)
 {
 	int	i;
@@ -50,6 +72,7 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 				printf("Argument must be positive number\n");
 				return (ERROR);
 			}
+			
 		i++;
 		}
 		return (SUCCESS);
