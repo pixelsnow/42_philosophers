@@ -39,11 +39,16 @@ int prepare_party(t_party *party)
 		pthread_mutex_init(&(party->forks[i]), NULL);
 		i++;
 	}
-	pthread_mutex_init(&(party->guard), NULL);
-	pthread_mutex_init(&(party->printing), NULL);
-	pthread_mutex_init(&(party->dying), NULL);
-	pthread_mutex_init(&(party->reporting_enough_meals), NULL);
-	pthread_mutex_init(&(party->party_going_on), NULL);
+	if (pthread_mutex_init(&(party->guard), NULL) != 0)
+		printf("\nGuard mutex init has failed\n");
+	if (pthread_mutex_init(&(party->printing), NULL) != 0)
+		printf("\nPrinting mutex init has failed\n");
+	if (pthread_mutex_init(&(party->dying), NULL) != 0)
+		printf("\nDying mutex init has failed\n");
+	if (pthread_mutex_init(&(party->reporting_enough_meals), NULL) != 0)
+		printf("\nReporting_enough_meals mutex init has failed\n");
+	if (pthread_mutex_init(&(party->party_going_on), NULL) != 0)
+		printf("\nParty_going_on mutex init has failed\n");
 
 	// time setting probably shouldn't be here
 	curr_time = get_current_time();
