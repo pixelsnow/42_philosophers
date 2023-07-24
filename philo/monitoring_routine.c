@@ -24,7 +24,7 @@ void	*monitoring_routine(void *party_data)
 			pthread_mutex_unlock(&(party->dying));
 		
 		// NOT TESTED at all. We check if everyone is fed already
-		if (party->number_of_meals_needed >= 0)
+		if (party->number_of_meals >= 0)
 		{
 			pthread_mutex_lock(&(party->reporting_enough_meals));
 			// number_of_meals_needed doesn't need a mutex Lionel said

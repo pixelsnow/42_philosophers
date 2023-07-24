@@ -11,9 +11,9 @@ int	parse_args_old(t_party	*party, int ac, char **av)
 	party->time_to_sleep = atoi(av[4]) * 1000;
 	// What if 0?
 	if (ac > 5)
-		party->number_of_meals_needed = atoi(av[5]);
+		party->number_of_meals = atoi(av[5]);
 	else
-		party->number_of_meals_needed = -1;
+		party->number_of_meals = -1;
 	return (SUCCESS);
 }
 

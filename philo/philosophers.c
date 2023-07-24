@@ -37,7 +37,7 @@ int	main(int ac, char **av)
 {
 	t_party	party;
 	
-	if (parse_args_old(&party, ac, av))
+	if (parse_args(&party, ac, av))
 	{
 		return (ERROR);
 	}

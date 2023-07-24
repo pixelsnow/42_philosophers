@@ -59,8 +59,8 @@ void	*philosopher_routine(void *philosopher_data)
 		pthread_mutex_unlock(&(philosopher->party->dying));
 
 		// 3. If this philo ate enough, stop
-		if (philosopher->party->number_of_meals_needed >= 0
-			&& philosopher->meal_count >= philosopher->party->number_of_meals_needed)
+		if (philosopher->party->number_of_meals >= 0
+			&& philosopher->meal_count >= philosopher->party->number_of_meals)
 		{
 			printf("Philo [%d] had enough meals\n", (int)philosopher->thread);
 			pthread_mutex_lock(&(philosopher->party->reporting_enough_meals));

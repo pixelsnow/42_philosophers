@@ -26,7 +26,7 @@ typedef struct s_party
 	unsigned long long	time_to_die;
 	unsigned long long	time_to_eat;
 	unsigned long long	time_to_sleep;
-	int					number_of_meals_needed;
+	int					number_of_meals;
 	t_philosopher		*philosophers;
 	pthread_t 			monitoring_thread;
 	pthread_mutex_t		*forks;
@@ -45,9 +45,12 @@ typedef enum e_return_value
 	ERROR,
 }						t_return_value;
 
-t_return_value    parse_args(t_party *party, int argc, char **argv);
+/**
+ * Contained in input.c 
+ */
+t_return_value		parse_args(t_party *party, int argc, char **argv);
 
-int					parse_args_old(t_party	*party, int ac, char **av); // old
+// int					parse_args_old(t_party	*party, int ac, char **av); // old
 int					quit_gracefully(t_party	*party); // useless now
 unsigned long long	get_current_time(void);
 

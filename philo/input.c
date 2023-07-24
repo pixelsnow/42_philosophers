@@ -34,9 +34,9 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 	else if (argument == 4)
 		party->time_to_sleep = validated_value;
 	else if (argument == 5)
-		party->number_of_meals_needed = (int)validated_value;
+		party->number_of_meals = (int)validated_value;
 	if (argc == 5)
-		party->number_of_meals_needed = -1;
+		party->number_of_meals = -1;
 	return (SUCCESS);
 }
 
