@@ -13,7 +13,7 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 		str++;
 	}
 	if (*str != '\0')
-		return (-42);
+		return (0); // Was putting -42 but ret val in unsigned, I assume 0 is fine
 	return ((unsigned long long)result);
 }
 
@@ -74,7 +74,7 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 		if (store_arg_if_validated(party, argv[index], index, argc) == ERROR &&
 			argv[index] != '\0')
 		{
-			printf("Argument must be positive number\n");
+			printf("Arguments must be positive numbers (0 considered not valid)\n");
 			print_philo_usage();
 			return (ERROR);
 		}

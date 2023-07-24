@@ -65,8 +65,8 @@ int					prepare_party(t_party *party);
 /**
  * Contained in start_threads.c
  */
-void				start_philosopher(t_party	*party, unsigned int i);
-void				start_monitoring(t_party	*party);
+t_return_value		start_philosopher(t_party	*party, unsigned int i);
+t_return_value		start_monitoring(t_party	*party);
 
 /**
  * Contained in philo_routine.c

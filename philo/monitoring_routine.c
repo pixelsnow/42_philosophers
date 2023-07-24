@@ -9,6 +9,7 @@ void	*monitoring_routine(void *party_data)
 	// This lock is supposed to hold the main thread while the party is ongoing
 	// but currently the problem is main thread needs to be held off with usleep
 	pthread_mutex_lock(&(party->party_going_on));
+	usleep(0.7 * party->time_to_die); //NEED TO REPLACE WITH custom usleep fct
 	while (1)
 	{
 		// BROKEN! party->someone_dead has garbage value inside.

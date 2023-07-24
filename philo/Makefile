@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+         #
+#    By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/22 15:37:53 by lclerc            #+#    #+#              #
-#    Updated: 2023/07/23 21:58:58 by vvagapov         ###   ########.fr        #
+#    Updated: 2023/07/24 15:00:18 by lclerc           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,9 @@ SRCS =	philosophers.c \
 		monitoring_routine.c \
 		philo_routine.c \
 		cleanup.c
-OBJ = $(SRCS:%.c=%.o)
+OBJ_DIR = build
+OBJ = $(addprefix $(OBJ_DIR)/, $(SRCS:%.c=%.o))
+DEP = $(OBJ:%.o=%.d)
 INC = philosophers.h
 
 #******************************************************************************#
@@ -43,8 +45,11 @@ all: $(NAME)
 $(NAME): $(OBJ) 
 	$(COMPILE) $^ -o $@ 
 
-%.o: %.c $(INC)
-	$(COMPILE) -I $(INC) $< -c -o $@
+# Dependency tracking. -MMD flag generates the dependency files useful when
+# having multiple header files project
+$(OBJ_DIR)/%.o: %.c $(INC)
+	mkdir -p $(OBJ_DIR)
+	$(COMPILE) -MMD -I $(INC) $< -c -o $@
 
 #******************************************************************************#
 # Debug rules																   #
@@ -63,12 +68,18 @@ thread_debug: all
 #******************************************************************************#
 
 clean:
-	/bin/rm -f $(OBJ)
+	/bin/rm -rf $(OBJ_DIR)
 
 fclean: clean
 	/bin/rm -f $(NAME)
 
 re: fclean all
+
+#******************************************************************************#
+# Dependency tracking														   #
+#******************************************************************************#
+
+-include $(DEP)
 
 #******************************************************************************#
 .PHONY: all clean fclean re debug thread_debug								   #
