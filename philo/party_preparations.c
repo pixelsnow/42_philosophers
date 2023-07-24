@@ -1,6 +1,6 @@
 #include "philosophers.h"
 
-void	prepare_philosopher(t_party	*party, unsigned int i)
+static void	prepare_philosopher(t_party	*party, unsigned int i)
 {
 	printf("prepare_philosopher\n");
 	party->philosophers[i].fork_own = &party->forks[i];

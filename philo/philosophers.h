@@ -50,16 +50,35 @@ typedef enum e_return_value
  */
 t_return_value		parse_args(t_party *party, int argc, char **argv);
 
+/**
+ * Contained in utils.c 
+ */
 // int					parse_args_old(t_party	*party, int ac, char **av); // old
 int					quit_gracefully(t_party	*party); // useless now
 unsigned long long	get_current_time(void);
 
+/**
+ * Contained in party_preparation
+ */
 int					prepare_party(t_party *party);
+
+/**
+ * Contained in start_threads.c
+ */
 void				start_philosopher(t_party	*party, unsigned int i);
 void				start_monitoring(t_party	*party);
+
+/**
+ * Contained in philo_routine.c
+ */
 void				*philosopher_routine(void *philosopher_data);
+
+/**
+ *	Contained in monitoring_routine.c
+ */
 void				*monitoring_routine(void *party_data);
 
-void				clean_up(t_party	*party);
+
+void				clean_up(t_party	*party); // Am I blind or where is that function? : ) 
 
 #endif
