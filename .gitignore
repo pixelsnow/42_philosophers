@@ -1,4 +1,6 @@
 .DS_Store
 *.o
 *.a
-philo
+/philo/philo
+a.out*
+/philo/build
