@@ -1,7 +1,7 @@
 #include "philosophers.h"
 
 // Temporary replacement
-int	parse_args_old(t_party	*party, int ac, char **av)
+int	parse_args_old(t_party *party, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
 		return (ERROR);
@@ -18,19 +18,27 @@ int	parse_args_old(t_party	*party, int ac, char **av)
 }
 
 // Currently useless
-int	quit_gracefully(t_party	*party)
+int	quit_gracefully(t_party *party)
 {
-	(void) party;
+	(void)party;
 	return (ERROR);
 }
 
-//void	print_whats_happening(t_philosopher *philosopher, char *event)
-//{
-//	unsigned long long	timestamp;
-//
-//
-//
-//}
+void	print_whats_happening(t_philosopher *philosopher, char *event)
+{
+	unsigned long long	timestamp;
+
+	timestamp = get_current_time() - philosopher->party->diner_start_time;
+	timestamp = timestamp / 1000; // is the conversion fine!!!
+	printf("inside print_wahts_happening\n");
+	pthread_mutex_lock(&(philosopher->party->dying));
+	printf("inside print_wahts_happening LOCKED\n");
+	//if (philosopher->party->someone_dead)
+		// Will need to adjust that when someone_dead is functional
+	printf("TOTO_%lld_%d_%s\n", timestamp, philosopher->index + 1, event);
+	pthread_mutex_unlock(&(philosopher->party->dying));
+	printf("inside print_wahts_happening UNLOCKED \n");
+}
 
 // Getting current time in microseconds
 unsigned long long	get_current_time(void)

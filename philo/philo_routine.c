@@ -39,22 +39,27 @@ void	eat_sleep_think(t_philosopher *philosopher)
 {
 	//take_forks(philosopher);
 	pthread_mutex_lock(philosopher->fork_own);
-	printf("Philo [%d] has taken a fork [own]\n", (int)philosopher->index);
+	//printf("Philo [%d] has taken a fork [own]\n", (int)philosopher->index);
+	print_whats_happening(philosopher, "has taken a fork [own]");
 	pthread_mutex_lock(philosopher->fork_borrowed);
-	printf("Philo [%d] has taken a fork [borrowed]\n", (int)philosopher->index);
+	//printf("Philo [%d] has taken a fork [borrowed]\n", (int)philosopher->index);
+	print_whats_happening(philosopher, "has taken a fork [borrowed]");
 	//pthread_mutex_lock(&(philosopher->party->printing));
 	philosopher->time_last_ate = get_current_time();
 	philosopher->meal_count += 1;
 	//pthread_mutex_unlock(&(philosopher->party->printing));
-	printf("Philo [%d] is eating\n", (int)philosopher->index);
+	print_whats_happening(philosopher, "is eating");
+	//printf("Philo [%d] is eating\n", (int)philosopher->index);
 	//May need to replace usleep with custom usleep()
 	usleep(philosopher->party->time_to_eat);
 	pthread_mutex_unlock(philosopher->fork_own);
 	pthread_mutex_unlock(philosopher->fork_borrowed);
-	printf("Philo [%d] is sleeping\n", (int)philosopher->index);
+	print_whats_happening(philosopher, "is sleeping");
+//	printf("Philo [%d] is sleeping\n", (int)philosopher->index);
 	//May need to replace usleep with custom usleep()
 	usleep(philosopher->party->time_to_sleep);
-	printf("Philo [%d] is thinking\n", (int)philosopher->index);
+	print_whats_happening(philosopher, "is thinking");
+	//printf("Philo [%d] is thinking\n", (int)philosopher->index);
 }
 void	*philosopher_routine(void *philosopher_data)
 {
@@ -62,13 +67,13 @@ void	*philosopher_routine(void *philosopher_data)
 	unsigned long long	curr_time;
 	int					someone_dead;
 
-
 	someone_dead = 0;
 	philosopher = (t_philosopher *)philosopher_data;
 	// Ensure synchronization with monitoring thread
 	pthread_mutex_lock(&(philosopher->party->guard));
 	pthread_mutex_unlock(&(philosopher->party->guard));
 	// Additional checks before the main loop
+	printf("philo_routing before while loop thread: party->someone_dead = %i\n", philosopher->party->someone_dead);
 	if (philosopher->index % 2 == 0)
 	{
 		printf("Philo [%d] is thinking\n", (int)philosopher->index);
@@ -79,6 +84,7 @@ void	*philosopher_routine(void *philosopher_data)
 		// Perform the eat_sleep_think routine
 		eat_sleep_think(philosopher);
 		// Check if philosopher died
+		printf("philo_routing inside while loop thread: party->someone_dead = %i\n", philosopher->party->someone_dead);
 		curr_time = get_current_time();
 		if (curr_time
 			- philosopher->time_last_ate > philosopher->party->time_to_die)
@@ -89,14 +95,14 @@ void	*philosopher_routine(void *philosopher_data)
 			philosopher->party->someone_dead = 1;
 			pthread_mutex_unlock(&(philosopher->party->dying));
 			// Signal the monitoring thread to check and quit if necessary
-            pthread_mutex_lock(&(philosopher->party->dying));
-            pthread_mutex_unlock(&(philosopher->party->dying));
+			pthread_mutex_lock(&(philosopher->party->dying));
+			pthread_mutex_unlock(&(philosopher->party->dying));
 			break ;
 		}
 		// Check if someone is dead (with proper synchronization)
-		//pthread_mutex_lock(&(philosopher->party->dying));
-		//someone_dead = philosopher->party->someone_dead;
-		//pthread_mutex_unlock(&(philosopher->party->dying));
+		pthread_mutex_lock(&(philosopher->party->dying));
+		someone_dead = philosopher->party->someone_dead;
+		pthread_mutex_unlock(&(philosopher->party->dying));
 		if (someone_dead)
 		{
 			printf("Philo [%d] detects someone is dead and quits\n",
@@ -228,7 +234,7 @@ void	*philosopher_routine(void *philosopher_data)
 ////		{
 ////			// Idk if these time calculations are actually correct
 ////			printf("Philo [%d] starved to death\n",
-	//				(int)philosopher->thread);
+//				(int)philosopher->thread);
 ////			pthread_mutex_lock(&(philosopher->party->dying));
 ////			philosopher->party->someone_dead = 1;
 ////			pthread_mutex_unlock(&(philosopher->party->dying));

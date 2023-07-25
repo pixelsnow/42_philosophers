@@ -12,7 +12,8 @@
  * failed to join.
  *
  * @param party Pointer to the `t_party` struct holding party information
- * @return Returns SUCCESS if all philosopher threads are joined successfully, otherwise FAILED.
+ * @return Returns SUCCESS if all philosopher threads are joined successfully,
+	otherwise FAILED.
  */
 t_return_value	join_philosopher_threads(t_party *party)
 {
@@ -39,7 +40,8 @@ t_return_value	join_philosopher_threads(t_party *party)
  * error occurs during joining, it prints an error message.
  *
  * @param party Pointer to the `t_party` struct holding party information
- * @return Returns SUCCESS if all philosopher threads are joined successfully, otherwise FAILED.
+ * @return Returns SUCCESS if all philosopher threads are joined successfully,
+	otherwise FAILED.
  */
 t_return_value	join_monitoring_thread(t_party *party)
 {
@@ -84,6 +86,7 @@ int	run_party(t_party *party)
 	pthread_mutex_lock(&(party->guard));
 	// (Make this a separate function maybe)
 	i = 0;
+	printf("Run_party start: party->someone_dead = %i\n", party->someone_dead);
 	while (i < party->number_of_philosophers)
 	{
 		if (start_philosopher(party, i) == ERROR)
@@ -94,8 +97,7 @@ int	run_party(t_party *party)
 		}
 		i++;
 	}
-		// time setting probably shouldn't be here
-	start_monitoring(party);
+	// time setting probably shouldn't be here
 	party->diner_start_time = get_current_time();
 	i = 0;
 	while (i < party->number_of_philosophers)
@@ -103,6 +105,9 @@ int	run_party(t_party *party)
 		party->philosophers[i].time_last_ate = party->diner_start_time;
 		i++;
 	}
+	start_monitoring(party);
+	printf("Run_party after monitoring thread: party->someone_dead = %i\n",
+			party->someone_dead);
 	printf("unlocking guard...\n");
 	pthread_mutex_unlock(&(party->guard));
 	/* Issue now is that main thread doesn't wait for monitoring and philosophers to stop.

@@ -10,9 +10,13 @@ void	*monitoring_routine(void *party_data)
 	printf("Monitoring thread is on\n");
 	// The monitoring thread waits for the party to start
 	pthread_mutex_lock(&(party->party_going_on));
+	printf("Monitoring_routing before while loop thread: party->someone_dead = %i\n",
+			party->someone_dead);
 	while (1)
 	{
 		// Check if someone is dead (with proper synchronization)
+		printf("Monitoring_routing inside while loop thread before assigning: party->someone_dead = %i\n",
+			party->someone_dead);
 		pthread_mutex_lock(&(party->dying));
 		someone_dead = party->someone_dead;
 		pthread_mutex_unlock(&(party->dying));
@@ -40,6 +44,7 @@ void	*monitoring_routine(void *party_data)
     // Prevent further printing
     pthread_mutex_lock(&(party->printing));
 
+	printf("Someone is dead = %i", party->someone_dead);
     // Let the main thread continue
     printf("Monitoring thread is off\n");
 	return (NULL);

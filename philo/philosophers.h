@@ -57,6 +57,7 @@ t_return_value		parse_args(t_party *party, int argc, char **argv);
 // int					parse_args_old(t_party	*party, int ac, char **av); // old
 int					quit_gracefully(t_party	*party); // useless now
 unsigned long long	get_current_time(void);
+void				print_whats_happening(t_philosopher *philosopher, char *event);
 
 /**
  * Contained in party_preparation
