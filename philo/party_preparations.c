@@ -13,7 +13,7 @@ static void	prepare_philosopher(t_party	*party, unsigned int i)
 int prepare_party(t_party *party)
 {
 	unsigned int		i;
-	unsigned long long	curr_time;
+	//unsigned long long	curr_time;
 	
 	// Init and malloc
 	// TODO: protect mallocs
@@ -51,12 +51,12 @@ int prepare_party(t_party *party)
 		printf("\nParty_going_on mutex init has failed\n");
 
 	// time setting probably shouldn't be here
-	curr_time = get_current_time();
-	i = 0;
-	while (i < party->number_of_philosophers)
-	{
-		party->philosophers[i].time_last_ate = curr_time;
-		i++;
-	}	i++;
+	//curr_time = get_current_time();
+	//i = 0;
+	//while (i < party->number_of_philosophers)
+	//{
+	//	party->philosophers[i].time_last_ate = curr_time;
+	//	i++;
+	//}
 	return (SUCCESS);
 }

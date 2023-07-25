@@ -5,7 +5,7 @@ void	clean_up(t_party	*party)
 {
 	unsigned int	i;
 
-	printf("clean_up\n");
+	printf("Start clean_up\n");
 
 	// Clean threads
 	i = 0;
@@ -32,4 +32,5 @@ void	clean_up(t_party	*party)
 	// Free memory
 	free(party->philosophers);
 	free(party->forks);
+	printf("temp clean_up\n");
 }

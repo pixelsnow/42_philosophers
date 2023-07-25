@@ -37,14 +37,6 @@ void	*monitoring_routine(void *party_data)
 		usleep(party->time_to_die / 10);
 	}
 
-    // Set the someone_dead flag to stop and quit the party
-    pthread_mutex_lock(&(party->dying));
-    party->someone_dead = 1;
-    pthread_mutex_unlock(&(party->dying));
-
-    // Signal the main thread to continue and quit the party
-    pthread_mutex_unlock(&(party->party_going_on));
-
     // Prevent further printing
     pthread_mutex_lock(&(party->printing));
 
