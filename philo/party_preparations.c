@@ -57,7 +57,6 @@ int prepare_party(t_party *party)
 	{
 		party->philosophers[i].time_last_ate = curr_time;
 		i++;
-	}
-
+	}	i++;
 	return (SUCCESS);
 }

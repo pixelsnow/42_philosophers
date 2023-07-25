@@ -24,6 +24,14 @@ int	quit_gracefully(t_party	*party)
 	return (ERROR);
 }
 
+//void	print_whats_happening(t_philosopher *philosopher, char *event)
+//{
+//	unsigned long long	timestamp;
+//
+//
+//
+//}
+
 // Getting current time in microseconds
 unsigned long long	get_current_time(void)
 {

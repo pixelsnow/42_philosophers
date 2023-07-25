@@ -26,6 +26,7 @@ typedef struct s_party
 	unsigned long long	time_to_die;
 	unsigned long long	time_to_eat;
 	unsigned long long	time_to_sleep;
+	unsigned long long 	diner_start_time;
 	int					number_of_meals;
 	t_philosopher		*philosophers;
 	pthread_t 			monitoring_thread;

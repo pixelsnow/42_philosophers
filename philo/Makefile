@@ -6,7 +6,7 @@
 #    By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/22 15:37:53 by lclerc            #+#    #+#              #
-#    Updated: 2023/07/24 15:00:18 by lclerc           ###   ########.fr        #
+#    Updated: 2023/07/25 15:38:12 by lclerc           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ NAME = philo
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 DEBUG_FLAGS = -g -fsanitize=address -static-libsan
-THREAD_DEBUG_FLAG = -g -fsanitize=thread -static-libsan
+THREAD_DEBUG_FLAGS = -g -fsanitize=thread -static-libsan
 COMPILE = $(CC) $(CFLAGS)
 SRCS =	philosophers.c \
 		input.c \
@@ -60,7 +60,7 @@ debug: CFLAGS += $(DEBUG_FLAGS)
 debug: all
 
 # Rule to compile the program with thread sanitizer
-thread_debug: CFLAGS += $(THREAD_DEBUG_FLAG)
+thread_debug: CFLAGS += $(THREAD_DEBUG_FLAGS)
 thread_debug: all
 
 #******************************************************************************#

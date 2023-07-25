@@ -94,7 +94,15 @@ int	run_party(t_party *party)
 		}
 		i++;
 	}
+		// time setting probably shouldn't be here
 	start_monitoring(party);
+//	party->diner_start_time = get_current_time();
+//	i = 0;
+//	while (i < party->number_of_philosophers)
+//	{
+//		party->philosophers[i].time_last_ate = party->diner_start_time;
+//		i++;
+//	}
 	printf("unlocking guard...\n");
 	pthread_mutex_unlock(&(party->guard));
 	/* Issue now is that main thread doesn't wait for monitoring and philosophers to stop.
