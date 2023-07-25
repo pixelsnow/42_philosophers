@@ -45,11 +45,13 @@ void	eat_sleep_think(t_philosopher *philosopher)
 	//printf("Philo [%d] has taken a fork [borrowed]\n", (int)philosopher->index);
 	print_whats_happening(philosopher, "has taken a fork [borrowed], GOT BOTH FORKS");
 	//pthread_mutex_lock(&(philosopher->party->printing));
+	pthread_mutex_lock(&philosopher->meal_update);
+	philosopher->meal_count++;
 	philosopher->time_last_ate = get_current_time();
-	philosopher->meal_count += 1;
+	pthread_mutex_unlock(&philosopher->meal_update);
 	//pthread_mutex_unlock(&(philosopher->party->printing));
 	print_whats_happening(philosopher, "is eating");
-	//printf("Philo [%d] is eating\n", (int)philosopher->index);
+	// Update meal info
 	//May need to replace usleep with custom usleep()
 	usleep(philosopher->party->time_to_eat);
 	pthread_mutex_unlock(philosopher->fork_own);
@@ -66,10 +68,10 @@ void	eat_sleep_think(t_philosopher *philosopher)
 void	*philosopher_routine(void *philosopher_data)
 {
 	t_philosopher		*philosopher;
-	unsigned long long	curr_time;
+/* 	unsigned long long	curr_time;*/
 	int					someone_dead;
 
-	someone_dead = 0;
+	someone_dead = 0; 
 	philosopher = (t_philosopher *)philosopher_data;
 	// Ensure synchronization with monitoring thread
 	pthread_mutex_lock(&(philosopher->party->guard));
@@ -89,13 +91,12 @@ void	*philosopher_routine(void *philosopher_data)
 		Must move all this to monitoring */
 		eat_sleep_think(philosopher);
 		// Check if philosopher died
-		pthread_mutex_lock(&(philosopher->party->dying));
+/* 		pthread_mutex_lock(&(philosopher->party->dying));
 		printf("philo_routing inside while loop thread: party->someone_dead = %i\n", philosopher->party->someone_dead);
 		pthread_mutex_lock(&(philosopher->party->dying));
 		curr_time = get_current_time();
 		if (curr_time
-			- philosopher->time_last_ate > philosopher->party->time_to_die)
-		// >= or > ?
+			- philosopher->time_last_ate >= philosopher->party->time_to_die)
 		{
 			printf("Philo [%d] starved to death\n", (int)philosopher->index);
 			pthread_mutex_lock(&(philosopher->party->dying));
@@ -105,7 +106,7 @@ void	*philosopher_routine(void *philosopher_data)
 			pthread_mutex_lock(&(philosopher->party->dying)); // unneeded lines
 			pthread_mutex_unlock(&(philosopher->party->dying));
 			break ;
-		}
+		} */
 		// Check if someone is dead (with proper synchronization)
 		pthread_mutex_lock(&(philosopher->party->dying));
 		someone_dead = philosopher->party->someone_dead;
@@ -117,7 +118,7 @@ void	*philosopher_routine(void *philosopher_data)
 			break ;
 		}
 		// Check if this philosopher has eaten enough (with proper synchronization)
-		if (philosopher->party->number_of_meals >= 0 &&
+/* 		if (philosopher->party->number_of_meals >= 0 &&
 			philosopher->meal_count >= philosopher->party->number_of_meals)
 		{
 			printf("Philo [%d] had enough meals\n", (int)philosopher->index);
@@ -125,7 +126,7 @@ void	*philosopher_routine(void *philosopher_data)
 			philosopher->party->number_of_philosophers_fed += 1;
 			pthread_mutex_unlock(&(philosopher->party->reporting_enough_meals));
 			break ;
-		}
+		} */
 	}
 	return (NULL);
 }

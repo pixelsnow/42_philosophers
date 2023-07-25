@@ -114,13 +114,14 @@ int	run_party(t_party *party)
 	if we remove usleep(1000) Main snatches party->party_going_on before monitoring gets to it
 	and therefore gets to cleanup while party is still ongoing. */
 	//printf("Main thread waiting...\n");
-	//usleep(1000);
-	//pthread_mutex_lock(&(party->party_going_on));
-	//pthread_mutex_unlock(&(party->party_going_on));
+	usleep(100);
 	printf("Main thread waiting...\n");
+	pthread_mutex_lock(&(party->party_going_on));
+	pthread_mutex_unlock(&(party->party_going_on));
+	printf("Main thread continuing...\n");
 	join_philosopher_threads(party);
 	join_monitoring_thread(party);
-	printf("Main thread continuing...\n");
+	printf("Threads joined.\n");
 	/* I'm wondering if the solution is that monitoring should trigger cleanup and everything instead,
 	and the main thread should just be allowed to die in peace? Or is that illegal */
 	return (SUCCESS);

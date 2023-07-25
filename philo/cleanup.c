@@ -12,6 +12,7 @@ void	clean_up(t_party	*party)
 	while (i < party->number_of_philosophers)
 	{
 		pthread_join(party->philosophers[i].thread, NULL);
+		pthread_mutex_destroy(&(party->philosophers[i].meal_update));
 		i++;
 	}
 	pthread_join(party->monitoring_thread, NULL);

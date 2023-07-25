@@ -8,6 +8,8 @@ static void	prepare_philosopher(t_party	*party, unsigned int i)
 		= &party->forks[(i + 1) % party->number_of_philosophers];
 	party->philosophers[i].meal_count = 0;
 	party->philosophers[i].party = party;
+	if (pthread_mutex_init(&(party->philosophers[i].meal_update), NULL) != SUCCESS)
+		printf("\nMeal_update mutex init has failed\n");
 }
 
 int prepare_party(t_party *party)

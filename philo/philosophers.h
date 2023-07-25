@@ -17,6 +17,7 @@ typedef struct s_philosopher
 	int					meal_count; // change to meals_left maybe? that would eliminate the need to reach for party->number_of_meals_needed every time. idk
 	unsigned int		index;
 	unsigned long long	time_last_ate;
+	pthread_mutex_t		meal_update; // protects meal_count and time_last_ate
 	t_party				*party;
 }						t_philosopher;
 
