@@ -55,7 +55,7 @@ t_return_value	start_monitoring(t_party	*party)
 		&(party->monitoring_thread),
 		NULL,
 		monitoring_routine,
-		(void *)&(party->monitoring_thread)) != 0)
+		(void *)party) != 0)
 		{
 			printf("Failed to create a monitoring thread\n");
 			return (ERROR);

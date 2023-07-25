@@ -28,11 +28,11 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 	else if (argument == 1)
 		party->number_of_philosophers = validated_value;
 	else if (argument == 2)
-		party->time_to_die = validated_value;
+		party->time_to_die = validated_value * 1000;
 	else if (argument == 3)
-		party->time_to_eat = validated_value;
+		party->time_to_eat = validated_value * 1000;
 	else if (argument == 4)
-		party->time_to_sleep = validated_value;
+		party->time_to_sleep = validated_value * 1000;
 	else if (argument == 5)
 		party->number_of_meals = (int)validated_value;
 	if (argc == 5)
@@ -45,7 +45,7 @@ static void print_philo_usage(void)
 	printf("Usage: ./philo\tnumber_of_philosophers\n\t\ttime_to_die\t(millisecond, ms)\n\t\ttime_to_eat\t(ms)\n\t\ttime_to_sleep\t(ms)\n\t\t[number_of_times_each_philosopher_must_eat]\n");
 }
 
-static t_return_value	argument_number_check(argc)
+static t_return_value	argument_number_check(int argc)
 {
 	if (argc == 5 || argc == 6)
 		return (SUCCESS);
@@ -72,7 +72,7 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 	while (index < argc)
 	{
 		if (store_arg_if_validated(party, argv[index], index, argc) == ERROR &&
-			argv[index] != '\0')
+			argv[index] != NULL)
 		{
 			printf("Arguments must be positive numbers (0 considered not valid)\n");
 			print_philo_usage();

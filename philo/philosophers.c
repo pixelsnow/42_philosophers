@@ -98,11 +98,11 @@ int	run_party(t_party *party)
 		i++;
 	}
 	// time setting probably shouldn't be here
-	party->diner_start_time = get_current_time();
+	party->party_start_time = get_current_time();
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
-		party->philosophers[i].time_last_ate = party->diner_start_time;
+		party->philosophers[i].time_last_ate = party->party_start_time;
 		i++;
 	}
 	start_monitoring(party);

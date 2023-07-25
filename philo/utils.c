@@ -28,16 +28,16 @@ void	print_whats_happening(t_philosopher *philosopher, char *event)
 {
 	unsigned long long	timestamp;
 
-	timestamp = get_current_time() - philosopher->party->diner_start_time;
-	timestamp = timestamp / 1000; // is the conversion fine!!!
-	printf("inside print_wahts_happening\n");
+	timestamp = get_current_time() - philosopher->party->party_start_time;
+	timestamp /= 1000; // is the conversion fine!!!
+	//printf("inside print_whats_happening\n");
 	pthread_mutex_lock(&(philosopher->party->dying));
-	printf("inside print_wahts_happening LOCKED\n");
+	//printf("inside print_whats_happening LOCKED\n");
 	//if (philosopher->party->someone_dead)
 		// Will need to adjust that when someone_dead is functional
-	printf("TOTO_%lld_%d_%s\n", timestamp, philosopher->index + 1, event);
+	printf("TOTO_%llu_[%d]_%s\n", timestamp, philosopher->index, event);
 	pthread_mutex_unlock(&(philosopher->party->dying));
-	printf("inside print_wahts_happening UNLOCKED \n");
+	//printf("inside print_whats_happening UNLOCKED \n");
 }
 
 // Getting current time in microseconds

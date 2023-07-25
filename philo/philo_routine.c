@@ -40,10 +40,10 @@ void	eat_sleep_think(t_philosopher *philosopher)
 	//take_forks(philosopher);
 	pthread_mutex_lock(philosopher->fork_own);
 	//printf("Philo [%d] has taken a fork [own]\n", (int)philosopher->index);
-	print_whats_happening(philosopher, "has taken a fork [own]");
+	print_whats_happening(philosopher, "has taken a fork [own], WAITING for second fork...");
 	pthread_mutex_lock(philosopher->fork_borrowed);
 	//printf("Philo [%d] has taken a fork [borrowed]\n", (int)philosopher->index);
-	print_whats_happening(philosopher, "has taken a fork [borrowed]");
+	print_whats_happening(philosopher, "has taken a fork [borrowed], GOT BOTH FORKS");
 	//pthread_mutex_lock(&(philosopher->party->printing));
 	philosopher->time_last_ate = get_current_time();
 	philosopher->meal_count += 1;
@@ -54,10 +54,12 @@ void	eat_sleep_think(t_philosopher *philosopher)
 	usleep(philosopher->party->time_to_eat);
 	pthread_mutex_unlock(philosopher->fork_own);
 	pthread_mutex_unlock(philosopher->fork_borrowed);
+	print_whats_happening(philosopher, "finished eating");
 	print_whats_happening(philosopher, "is sleeping");
 //	printf("Philo [%d] is sleeping\n", (int)philosopher->index);
 	//May need to replace usleep with custom usleep()
 	usleep(philosopher->party->time_to_sleep);
+	print_whats_happening(philosopher, "finished sleeping");
 	print_whats_happening(philosopher, "is thinking");
 	//printf("Philo [%d] is thinking\n", (int)philosopher->index);
 }
@@ -82,9 +84,14 @@ void	*philosopher_routine(void *philosopher_data)
 	while (1)
 	{
 		// Perform the eat_sleep_think routine
+		/* WE CANNOT monitor for the death here like this,
+		it doesn't work because of eat_sleep_think taking a long time.
+		Must move all this to monitoring */
 		eat_sleep_think(philosopher);
 		// Check if philosopher died
+		pthread_mutex_lock(&(philosopher->party->dying));
 		printf("philo_routing inside while loop thread: party->someone_dead = %i\n", philosopher->party->someone_dead);
+		pthread_mutex_lock(&(philosopher->party->dying));
 		curr_time = get_current_time();
 		if (curr_time
 			- philosopher->time_last_ate > philosopher->party->time_to_die)
@@ -95,7 +102,7 @@ void	*philosopher_routine(void *philosopher_data)
 			philosopher->party->someone_dead = 1;
 			pthread_mutex_unlock(&(philosopher->party->dying));
 			// Signal the monitoring thread to check and quit if necessary
-			pthread_mutex_lock(&(philosopher->party->dying));
+			pthread_mutex_lock(&(philosopher->party->dying)); // unneeded lines
 			pthread_mutex_unlock(&(philosopher->party->dying));
 			break ;
 		}
