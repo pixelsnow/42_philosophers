@@ -32,7 +32,7 @@ typedef struct s_party
 	t_philosopher		*philosophers;
 	pthread_t 			monitoring_thread;
 	pthread_mutex_t		*forks;
-	pthread_mutex_t		guard;
+	pthread_mutex_t		guard; // INITIALIZED
 	pthread_mutex_t		printing; // TODO include everywhere
 	pthread_mutex_t		dying; // someone_dead
 	pthread_mutex_t		reporting_enough_meals; // number_of_philosophers_fed
@@ -58,6 +58,7 @@ t_return_value		parse_args(t_party *party, int argc, char **argv);
 // int					parse_args_old(t_party	*party, int ac, char **av); // old
 int					quit_gracefully(t_party	*party); // useless now
 unsigned long long	get_current_time(void);
+void				custom_usleep(unsigned long long duration, t_party *party);
 void				print_whats_happening(t_philosopher *philosopher, char *event);
 
 /**
