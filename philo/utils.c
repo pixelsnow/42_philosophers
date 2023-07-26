@@ -53,8 +53,8 @@ void	print_whats_happening(t_philosopher *philosopher, char *event)
 	//printf("inside print_whats_happening LOCKED\n");
 	//if (philosopher->party->someone_dead)
 	// Will need to adjust that when someone_dead is functional
-	printf("TOTO_%llu_[%d]_%s\n", timestamp, philosopher->index, event);
-	pthread_mutex_unlock(&(philosopher->party->dying));
+	printf("%llu\t%d\t%s\n", timestamp, philosopher->index + 1, event); // make sure philosopher index is fine for output
+	pthread_mutex_unlock(&(philosopher->party->dying)); 
 	//printf("inside print_whats_happening UNLOCKED \n");
 }
 
