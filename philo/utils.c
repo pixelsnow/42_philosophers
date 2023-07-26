@@ -29,7 +29,7 @@ void	print_whats_happening(t_philosopher *philosopher, char *event)
 	unsigned long long	timestamp;
 
 	timestamp = get_current_time() - philosopher->party->party_start_time;
-	timestamp /= 1000; // is the conversion fine!!!
+	timestamp /= 1000ULL; // // cast to ULL to avoid potential int overflow
 	//printf("inside print_whats_happening\n");
 	pthread_mutex_lock(&(philosopher->party->dying));
 	//printf("inside print_whats_happening LOCKED\n");
@@ -46,5 +46,5 @@ unsigned long long	get_current_time(void)
 	struct timeval tp;
 
 	gettimeofday(&tp, NULL);
-	return (tp.tv_sec * 1000000 + tp.tv_usec);
+	return ((unsigned long long) tp.tv_sec * 1000000ULL + tp.tv_usec); // cast to ULL to avoid potential int overflow
 }
