@@ -47,14 +47,12 @@ void	print_whats_happening(t_philosopher *philosopher, char *event)
 	unsigned long long	timestamp;
 
 	timestamp = get_current_time() - philosopher->party->party_start_time;
-	timestamp /= 1000ULL; // // cast to ULL to avoid potential int overflow
-	//printf("inside print_whats_happening\n");
+	timestamp /= 1000ULL;  // cast to ULL to avoid potential int overflow
 	pthread_mutex_lock(&(philosopher->party->dying));
-	//printf("inside print_whats_happening LOCKED\n");
-	//if (philosopher->party->someone_dead)
-	// Will need to adjust that when someone_dead is functional
-	printf("%llu\t%d\t%s\n", timestamp, philosopher->index + 1, event); // make sure philosopher index is fine for output
-	pthread_mutex_unlock(&(philosopher->party->dying)); 
+	if (philosopher->party->someone_dead == 0)
+		printf("%llu\t%d %s\n", timestamp, philosopher->index + 1, event);
+			// make sure philosopher index is fine for output
+	pthread_mutex_unlock(&(philosopher->party->dying));
 	//printf("inside print_whats_happening UNLOCKED \n");
 }
 

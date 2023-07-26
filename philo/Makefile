@@ -6,7 +6,7 @@
 #    By: lclerc <lclerc@hive.student.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/22 15:37:53 by lclerc            #+#    #+#              #
-#    Updated: 2023/07/25 15:38:12 by lclerc           ###   ########.fr        #
+#    Updated: 2023/07/26 17:28:24 by lclerc           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@
 NAME = philo
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS_OPTIMIZED = -O2
 DEBUG_FLAGS = -g -fsanitize=address -static-libsan
 THREAD_DEBUG_FLAGS = -g -fsanitize=thread -static-libsan
 COMPILE = $(CC) $(CFLAGS)
@@ -52,7 +53,7 @@ $(OBJ_DIR)/%.o: %.c $(INC)
 	$(COMPILE) -MMD -I $(INC) $< -c -o $@
 
 #******************************************************************************#
-# Debug rules																   #
+# Debug & Optimization rules																   #
 #******************************************************************************#
 
 # Rule to compile the program with address sanitizer
@@ -62,6 +63,10 @@ debug: all
 # Rule to compile the program with thread sanitizer
 thread_debug: CFLAGS += $(THREAD_DEBUG_FLAGS)
 thread_debug: all
+
+# Rule to compile with execution speed optimization
+optimized : CFLAGS += $(CFLAGS_OPTIMIZED)
+optimized : all 
 
 #******************************************************************************#
 # Cleaning - Deletion														   #

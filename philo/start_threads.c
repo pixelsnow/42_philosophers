@@ -18,8 +18,7 @@
 t_return_value	start_philosopher(t_party	*party, unsigned int i)
 {
 	// REMEMEBER: returns -1 on error, 0 on success
-	printf("start_philosopher\n");
-	// Sheree has a personal philo init mutex eaten_mutex
+//	printf("start_philosopher\n");
 	party->philosophers[i].index = i;
 	if (pthread_create(
 		&(party->philosophers[i].thread), 
@@ -49,8 +48,7 @@ t_return_value	start_philosopher(t_party	*party, unsigned int i)
  */
 t_return_value	start_monitoring(t_party	*party)
 {
-	printf("monitor_party\n");
-	//TODO: add fail check
+//	printf("monitor_party\n");
 	if (pthread_create(
 		&(party->monitoring_thread),
 		NULL,

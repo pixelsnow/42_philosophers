@@ -86,7 +86,7 @@ int	run_party(t_party *party)
 	pthread_mutex_lock(&(party->guard));
 	// (Make this a separate function maybe)
 	i = 0;
-	printf("Run_party start: party->someone_dead = %i\n", party->someone_dead);
+	//printf("Run_party start: party->someone_dead = %i\n", party->someone_dead);
 	while (i < party->number_of_philosophers)
 	{
 		if (start_philosopher(party, i) == ERROR)
@@ -106,9 +106,9 @@ int	run_party(t_party *party)
 		i++;
 	}
 	start_monitoring(party);
-	printf("Run_party after monitoring thread: party->someone_dead = %i\n",
-			party->someone_dead);
-	printf("unlocking guard...\n");
+//	printf("Run_party after monitoring thread: party->someone_dead = %i\n",
+//			party->someone_dead);
+//	printf("unlocking guard...\n");
 	pthread_mutex_unlock(&(party->guard));
 	/* Issue now is that main thread doesn't wait for monitoring and philosophers to stop.
 	if we remove usleep(1000) Main snatches party->party_going_on before monitoring gets to it

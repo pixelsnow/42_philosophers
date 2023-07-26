@@ -1,5 +1,14 @@
 #include "philosophers.h"
-
+/**
+ * @brief Checks if any philosopher has starved.
+ *
+ * This function checks each philosopher in the party and determines if any
+ * philosopher has starved. It calculates the time since the philosopher last ate
+ * and compares it with the time_to_die value to detect starvation.
+ *
+ * @param party A pointer to the t_party structure representing the philosopher party.
+ * @return 1 if any philosopher has starved, 0 otherwise.
+ */
 int someone_starved(t_party	*party)
 {
 	unsigned int	i;
@@ -15,14 +24,24 @@ int someone_starved(t_party	*party)
 		pthread_mutex_unlock(&(party->philosophers[i].meal_update));
 		if (curr_time - time_philo_last_ate >= party->time_to_die)
 		{
-			printf("Philosopher %u starved\n", i);
+			print_whats_happening(party->philosophers, "died");
 			return (1);
 		}
 		i++;
 	}
 	return (0);
 }
-
+/**
+ * @brief Checks if every philosopher has reached the number of meals specified.
+ *
+ * This function checks each philosopher's meal count and compares it with the
+ * number_of_meals value to determine if every philosopher has eaten the specified
+ * number of meals.
+ *
+ * @param party A pointer to the t_party structure representing the philosopher party.
+ * @return 1 if every philosopher has eaten the specified number of meals or if the
+ *         number_of_meals value is negative, 0 otherwise.
+ */
 int	everyone_is_fed(t_party	*party)
 {
 	unsigned int	i;
@@ -85,7 +104,7 @@ void	*monitoring_routine(void *party_data)
 			break ;
 		}
 		// Delay between checks (with proper synchronization)
-		custom_usleep(party->time_to_die / 10000, party);
+		custom_usleep(party->time_to_die / 10, party);
 	}
 
     // Prevent further printing
