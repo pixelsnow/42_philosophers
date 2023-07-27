@@ -1,7 +1,5 @@
 #include "philosophers.h"
 
-// Function to join philosopher threads
-
 /**
  * @brief Joins all philosopher threads.
  *
@@ -15,19 +13,17 @@
  * @return Returns SUCCESS if all philosopher threads are joined successfully,
 	otherwise FAILED.
  */
-t_return_value	join_philosopher_threads(t_party *party)
+static t_return_value	join_philosopher_threads(t_party *party)
 {
 	unsigned int	i;
 
 	for (i = 0; i < party->number_of_philosophers; i++)
 	{
-		//printf("Joining philosopher thread %u\n", i);
 		if (pthread_join(party->philosophers[i].thread, NULL) != SUCCESS)
 		{
 			printf("Failed to join philosopher thread %u\n", i);
 			return (ERROR);
 		}
-		//printf("Joined philosopher thread %u -> SUCCESS\n", i);
 	}
 	return (SUCCESS);
 }
@@ -43,61 +39,31 @@ t_return_value	join_philosopher_threads(t_party *party)
  * @return Returns SUCCESS if all philosopher threads are joined successfully,
 	otherwise FAILED.
  */
-t_return_value	join_monitoring_thread(t_party *party)
+static t_return_value	join_monitoring_thread(t_party *party)
 {
-	//printf("Joining monitoring thread\n");
 	if (pthread_join(party->monitoring_thread, NULL) != SUCCESS)
 	{
 		printf("Failed to join monitoring thread\n");
 		return (ERROR);
 	}
-	// Monitoring thread currently never ending -> check Routine
-	//printf("Joined monitoring thread -> SUCCESS\n");
 	return (SUCCESS);
 }
 
-// Main thread that runs the party and starts all the threads
-/**
- * @brief Function to run the philosopher party and start all the threads.
- *
- * This function is the main thread that organizes the philosopher party and
- * starts all the philosopher threads along with the monitoring thread. It
- * locks the `party->guard` mutex to ensure that all threads start
- * simultaneously and then proceeds to start the philosopher threads using the
- * `start_philosopher` function. After starting all the threads, it unlocks the
- * `party->guard` mutex and waits for a short period to ensure that the threads
- * have been successfully started before proceeding to the next step.
- *
- * The main thread then proceeds to start the monitoring thread using the
- * `start_monitoring` function. It prints the message "Main thread waiting..."
- * and waits for all philosopher threads and the monitoring thread to finish
- * using `join_philosopher_threads` and `join_monitoring_thread`. After joining
- * the threads, it continues to print the message "Main thread continuing..."
- * and proceeds to cleanup using `clean_up`.
- *
- * @param party	Pointer to the `t_party` struct holding party information
- * @return int	`SUCCESS` if the party runs successfully, otherwise `ERROR`
- */
-int	run_party(t_party *party)
+static int	run_party(t_party *party)
 {
 	unsigned int	i;
 
-	// Start all threads simultaneously
 	pthread_mutex_lock(&(party->guard));
-	// (Make this a separate function maybe)
 	i = 0;
-	//printf("Run_party start: party->someone_dead = %i\n", party->someone_dead);
 	while (i < party->number_of_philosophers)
 	{
 		if (start_philosopher(party, i) == ERROR)
 		{
-			//How do we set the end of party here?
 			pthread_mutex_unlock(&(party->guard));
 			break ;
 		}
 		i++;
 	}
-	// time setting probably shouldn't be here
 	party->party_start_time = get_current_time();
 	i = 0;
 	while (i < party->number_of_philosophers)
@@ -107,10 +73,8 @@ int	run_party(t_party *party)
 	}
 	start_monitoring(party);
 	pthread_mutex_unlock(&(party->guard));
-	printf("Main thread waiting for threads to terminate and join...\n");
 	join_monitoring_thread(party);
 	join_philosopher_threads(party);
-	printf("Threads joined.\n");
 	return (SUCCESS);
 }
 

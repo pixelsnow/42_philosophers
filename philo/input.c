@@ -74,7 +74,7 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 		if (store_arg_if_validated(party, argv[index], index, argc) == ERROR &&
 			argv[index] != NULL)
 		{
-			printf("Arguments must be positive numbers (0 considered not valid)\n");
+			printf("Arguments must be only positive numbers (0 considered not valid)\n");
 			print_philo_usage();
 			return (ERROR);
 		}

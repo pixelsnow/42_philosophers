@@ -15,7 +15,6 @@ static t_return_value	prepare_philosopher(t_party	*party, unsigned int i)
 t_return_value prepare_party(t_party *party)
 {
 	unsigned int		i;
-	//unsigned long long	curr_time;
 	
 	party->someone_dead = 0;
 	party->number_of_philosophers_fed = 0;
@@ -25,15 +24,12 @@ t_return_value prepare_party(t_party *party)
 	party->forks = malloc(sizeof(pthread_mutex_t) * party->number_of_philosophers);
 	if (party->forks == NULL)
 		return (MALLOC_FAIL);
-
-	// Init philosopers
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
 		prepare_philosopher(party, i);
 		i++;
 	}
-	// Init all mutexes
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{

@@ -83,6 +83,6 @@ void				*philosopher_routine(void *philosopher_data);
 void				*monitoring_routine(void *party_data);
 
 
-void				clean_up(t_party	*party); // Am I blind or where is that function? : ) 
+void				clean_up(t_party	*party); 
 
 #endif

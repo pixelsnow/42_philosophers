@@ -1,13 +1,9 @@
 #include "philosophers.h"
 
-// Cleans all threads, mutexes and memory
 void	clean_up(t_party	*party)
 {
 	unsigned int	i;
 
-	printf("Start clean_up\n");
-
-	// Clean threads
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
@@ -16,8 +12,6 @@ void	clean_up(t_party	*party)
 		i++;
 	}
 	pthread_join(party->monitoring_thread, NULL);
-
-	// Clean mutexes
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
@@ -28,9 +22,6 @@ void	clean_up(t_party	*party)
 	pthread_mutex_destroy(&(party->printing));
 	pthread_mutex_destroy(&(party->dying));
 	pthread_mutex_destroy(&(party->reporting_enough_meals));
-
-	// Free memory
 	free(party->philosophers);
 	free(party->forks);
-	printf("temp clean_up\n");
 }
