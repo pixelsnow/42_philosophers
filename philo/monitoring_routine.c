@@ -67,7 +67,6 @@ void	*monitoring_routine(void *party_data)
 	t_party	*party;
 
 	party = (t_party *)party_data;
-	pthread_mutex_lock(&(party->party_going_on));
 	while (1)
 	{
 		if (someone_starved(party))
@@ -89,6 +88,5 @@ void	*monitoring_routine(void *party_data)
 		custom_usleep(party->time_to_die / 10, party);
 	}
     pthread_mutex_lock(&(party->printing));
-	pthread_mutex_unlock(&(party->party_going_on));
 	return (NULL);
 }

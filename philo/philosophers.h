@@ -36,7 +36,6 @@ typedef struct s_party
 	pthread_mutex_t		printing; // TODO include everywhere
 	pthread_mutex_t		dying; // someone_dead
 	pthread_mutex_t		reporting_enough_meals; // number_of_philosophers_fed
-	pthread_mutex_t		party_going_on; // holds main thread
 	unsigned int		someone_dead;
 	unsigned int		number_of_philosophers_fed;
 }						t_party;

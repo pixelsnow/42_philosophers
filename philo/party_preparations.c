@@ -49,7 +49,5 @@ t_return_value prepare_party(t_party *party)
 	 	return (MUTEX_FAIL);
 	if (pthread_mutex_init(&(party->reporting_enough_meals), NULL) != SUCCESS)
 	 	return (MUTEX_FAIL);
-	if (pthread_mutex_init(&(party->party_going_on), NULL) != SUCCESS)
-	 	return (MUTEX_FAIL);
 	return (SUCCESS);
 }

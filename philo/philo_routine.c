@@ -20,10 +20,8 @@ t_return_value	eat_sleep_think(t_philosopher *philosopher)
 		custom_usleep(philosopher->party->time_to_eat, philosopher->party);
 		pthread_mutex_unlock(philosopher->fork_own);
 		pthread_mutex_unlock(philosopher->fork_borrowed);
-		print_whats_happening(philosopher, "finished eating");
 		print_whats_happening(philosopher, "is sleeping");
 		custom_usleep(philosopher->party->time_to_sleep, philosopher->party);
-		print_whats_happening(philosopher, "finished sleeping");
 		print_whats_happening(philosopher, "is thinking");
 		return (SUCCESS);
 	}

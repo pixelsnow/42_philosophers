@@ -28,7 +28,6 @@ void	clean_up(t_party	*party)
 	pthread_mutex_destroy(&(party->printing));
 	pthread_mutex_destroy(&(party->dying));
 	pthread_mutex_destroy(&(party->reporting_enough_meals));
-	pthread_mutex_destroy(&(party->party_going_on));
 
 	// Free memory
 	free(party->philosophers);

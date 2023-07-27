@@ -107,12 +107,9 @@ int	run_party(t_party *party)
 	}
 	start_monitoring(party);
 	pthread_mutex_unlock(&(party->guard));
-	printf("Main thread waiting...\n");
-	pthread_mutex_lock(&(party->party_going_on));
-	pthread_mutex_unlock(&(party->party_going_on));
-	printf("Main thread continuing...\n");
-	join_philosopher_threads(party);
+	printf("Main thread waiting for threads to terminate and join...\n");
 	join_monitoring_thread(party);
+	join_philosopher_threads(party);
 	printf("Threads joined.\n");
 	return (SUCCESS);
 }
