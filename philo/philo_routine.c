@@ -1,28 +1,33 @@
 #include "philosophers.h"
 
 // Combined eat, sleep, and think function
-void	eat_sleep_think(t_philosopher *philosopher)
+t_return_value	eat_sleep_think(t_philosopher *philosopher)
 {
-	pthread_mutex_lock(philosopher->fork_own);
-	print_whats_happening(philosopher, "has taken a fork [own], WAITING for second fork...");
-	pthread_mutex_lock(philosopher->fork_borrowed);
-	print_whats_happening(philosopher, "has taken a fork [borrowed], GOT BOTH FORKS");
-	//pthread_mutex_lock(&(philosopher->party->printing));
-	pthread_mutex_lock(&philosopher->meal_update);
-	philosopher->meal_count++;
-	philosopher->time_last_ate = get_current_time();
-	pthread_mutex_unlock(&philosopher->meal_update);
-	//pthread_mutex_unlock(&(philosopher->party->printing));
-	print_whats_happening(philosopher, "is eating");
-	// Update meal info
-	custom_usleep(philosopher->party->time_to_eat, philosopher->party);
-	pthread_mutex_unlock(philosopher->fork_own);
-	pthread_mutex_unlock(philosopher->fork_borrowed);
-	print_whats_happening(philosopher, "finished eating");
-	print_whats_happening(philosopher, "is sleeping");
-	custom_usleep(philosopher->party->time_to_sleep, philosopher->party);
-	print_whats_happening(philosopher, "finished sleeping");
-	print_whats_happening(philosopher, "is thinking");
+	if (philosopher->party->number_of_philosophers != 1)
+	{
+		pthread_mutex_lock(philosopher->fork_own);
+		print_whats_happening(philosopher, "has taken a fork [own], WAITING for second fork...");
+		pthread_mutex_lock(philosopher->fork_borrowed);
+		print_whats_happening(philosopher, "has taken a fork [borrowed], GOT BOTH FORKS");
+		//pthread_mutex_lock(&(philosopher->party->printing));
+		pthread_mutex_lock(&philosopher->meal_update);
+		philosopher->meal_count++;
+		philosopher->time_last_ate = get_current_time();
+		pthread_mutex_unlock(&philosopher->meal_update);
+		//pthread_mutex_unlock(&(philosopher->party->printing));
+		print_whats_happening(philosopher, "is eating");
+		// Update meal info
+		custom_usleep(philosopher->party->time_to_eat, philosopher->party);
+		pthread_mutex_unlock(philosopher->fork_own);
+		pthread_mutex_unlock(philosopher->fork_borrowed);
+		print_whats_happening(philosopher, "finished eating");
+		print_whats_happening(philosopher, "is sleeping");
+		custom_usleep(philosopher->party->time_to_sleep, philosopher->party);
+		print_whats_happening(philosopher, "finished sleeping");
+		print_whats_happening(philosopher, "is thinking");
+		return (SUCCESS);
+	}
+	return (ERROR);
 }
 void	*philosopher_routine(void *philosopher_data)
 {
@@ -47,12 +52,14 @@ void	*philosopher_routine(void *philosopher_data)
 		/* WE CANNOT monitor for the death here like this,
 		it doesn't work because of eat_sleep_think taking a long time.
 		Must move all this to monitoring */
-		eat_sleep_think(philosopher);
-		// Check if philosopher died
-		/* 		pthread_mutex_lock(&(philosopher->party->dying));
-		printf("philo_routing inside while loop thread: party->someone_dead =
-				%i\n", philosopher->party->someone_dead);
-		pthread_mutex_lock(&(philosopher->party->dying));
+		if (eat_sleep_think(philosopher) == ERROR)
+		{
+			print_whats_happening(philosopher, "has taken a fork");
+			break;
+		} // Check if philosopher die;d
+		// 		pthread_mutex_lock(&(philosopher->party->dying));
+		printf("philo_routing inside while loop thread: party->someone_dead = %i\n", philosopher->party->someone_dead);
+		/*pthread_mutex_lock(&(philosopher->party->dying));
 		curr_time = get_current_time();
 		if (curr_time
 			- philosopher->time_last_ate >= philosopher->party->time_to_die)
@@ -87,5 +94,6 @@ void	*philosopher_routine(void *philosopher_data)
 			break ;
 		} */
 	}
+	printf("Philo routine is off\n");
 	return (NULL);
 }

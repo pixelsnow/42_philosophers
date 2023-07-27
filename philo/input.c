@@ -23,7 +23,7 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 	int	validated_value;
 
 	validated_value = ascii_to_positive_int(string);
-	if (validated_value == -42)
+	if (validated_value == 0)
 		return (ERROR);
 	else if (argument == 1)
 		party->number_of_philosophers = validated_value;
