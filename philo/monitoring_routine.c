@@ -65,21 +65,11 @@ int	everyone_is_fed(t_party	*party)
 void	*monitoring_routine(void *party_data)
 {
 	t_party	*party;
-/* 	int		someone_dead; */
 
 	party = (t_party *)party_data;
-	printf("Monitoring thread is on\n");
-	// The monitoring thread waits for the party to start
 	pthread_mutex_lock(&(party->party_going_on));
-/* 	printf("Monitoring_routine before while loop thread: party->someone_dead = %i\n",
-			party->someone_dead); */
 	while (1)
 	{
-		// Check if someone is dead (with proper synchronization)
-		// printf("Monitoring_routine inside while loop thread, loop start\n");
-		/* pthread_mutex_lock(&(party->dying));
-		someone_dead = party->someone_dead;
-		pthread_mutex_unlock(&(party->dying)); */
 		if (someone_starved(party))
 		{
 			pthread_mutex_lock(&(party->dying));
@@ -88,29 +78,17 @@ void	*monitoring_routine(void *party_data)
 			printf("Monitoring detected DEATH\n");
 			break ;
 		}
-		// Check if everyone is fed already (with proper synchronization)
 		if (everyone_is_fed(party))
 		{
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
-			/* pthread_mutex_lock(&(party->reporting_enough_meals));
-			all_fed = party->number_of_philosophers_fed >= party->number_of_philosophers;
-			printf("Monitoring number_of_philosophers_fed: %u\n", party->number_of_philosophers_fed);
-			printf("Monitoring number_of_philosophers: %u\n", party->number_of_philosophers);
-			pthread_mutex_unlock(&(party->reporting_enough_meals));
-			printf("All fed? %i\n", all_fed); */
 			printf("Monitoring detected ALL PHILOS ARE FED\n");
 			break ;
 		}
-		// Delay between checks (with proper synchronization)
 		custom_usleep(party->time_to_die / 10, party);
 	}
-
-    // Prevent further printing
     pthread_mutex_lock(&(party->printing));
-    // Let the main thread continue
 	pthread_mutex_unlock(&(party->party_going_on));
-    printf("Monitoring thread is off\n");
 	return (NULL);
 }

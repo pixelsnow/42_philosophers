@@ -45,6 +45,9 @@ typedef enum e_return_value
 {
 	SUCCESS,
 	ERROR,
+	MALLOC_FAIL,
+	MUTEX_FAIL,
+	THREAD_FAIL,
 }						t_return_value;
 
 /**
@@ -55,8 +58,6 @@ t_return_value		parse_args(t_party *party, int argc, char **argv);
 /**
  * Contained in utils.c 
  */
-// int					parse_args_old(t_party	*party, int ac, char **av); // old
-int					quit_gracefully(t_party	*party); // useless now
 unsigned long long	get_current_time(void);
 void				custom_usleep(unsigned long long duration, t_party *party);
 void				print_whats_happening(t_philosopher *philosopher, char *event);
@@ -64,7 +65,7 @@ void				print_whats_happening(t_philosopher *philosopher, char *event);
 /**
  * Contained in party_preparation
  */
-int					prepare_party(t_party *party);
+t_return_value		prepare_party(t_party *party);
 
 /**
  * Contained in start_threads.c
