@@ -21,10 +21,10 @@ static t_return_value	eat_sleep_think(t_philosopher *philosopher)
 		print_whats_happening(philosopher, "is thinking");
 		return (SUCCESS);
 	}
-	return (ERROR);
+	return (SINGLE_PHILO_CASE);
 }
 
-void * philosopher_routine(void *philosopher_data)
+void	*philosopher_routine(void *philosopher_data)
 {
 	t_philosopher	*philosopher;
 	int				someone_dead;
@@ -38,7 +38,7 @@ void * philosopher_routine(void *philosopher_data)
 		custom_usleep(philosopher->party->time_to_eat / 10, philosopher->party);
 	while (1)
 	{
-		if (eat_sleep_think(philosopher) == ERROR)
+		if (eat_sleep_think(philosopher) == SINGLE_PHILO_CASE)
 		{
 			print_whats_happening(philosopher, "has taken a fork");
 			break ;

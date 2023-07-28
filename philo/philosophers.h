@@ -57,6 +57,7 @@ typedef enum e_return_value
 	MUTEX_FAIL,
 	THREAD_FAIL,
 	JOIN_FAIL,
+	SINGLE_PHILO_CASE
 }						t_return_value;
 
 /**
