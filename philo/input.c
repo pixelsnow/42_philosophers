@@ -65,7 +65,7 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 
 static void	print_philo_usage(void)
 {
-	printf("Usage: ./philo\tnumber_of_philosophersi\t(max 200 philos)\n\t\ttime_to_die\t\
+	printf("Usage: ./philo\tnumber_of_philosophers\t(max 200 philos)\n\t\ttime_to_die\t\
 		(millisecond, ms)\n\t\ttime_to_eat\t\t\t(ms)\n\t\ttime_to_sleep\t\
 		(ms)\n\t\t[number_of_times_each_philosopher_must_eat]\n");
 }
@@ -75,15 +75,13 @@ static t_return_value	argument_number_check(int argc)
 	if (argc == EXPECT_ARG_COUNT || argc == EXPECT_ARG_COUNT_WITH_MEALS)
 		return (SUCCESS);
 	printf("Improper amount of arguments. Expected %d or %d arguments\n",
-			EXPECT_ARG_COUNT - 1,
-			EXPECT_ARG_COUNT_WITH_MEALS - 1);
+		EXPECT_ARG_COUNT - 1, EXPECT_ARG_COUNT_WITH_MEALS - 1);
 	print_philo_usage();
 	return (ARG_COUNT_ERROR);
 }
 
 /**
-
-	* @brief Check if number of arguments is correct and are positive numerical values
+ * @brief Check if number of arguments is correct and are positive numerical values
  * 
  * @param party Struct organizing the party
  * @param argc
