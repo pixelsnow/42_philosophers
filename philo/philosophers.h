@@ -9,7 +9,7 @@
 
 # define EXPECT_ARG_COUNT 5
 # define EXPECT_ARG_COUNT_WITH_MEALS 6
-# define MAX_AMOUNT_PHILO_ALLOWED 500
+# define MAX_AMOUNT_PHILO_ALLOWED 200
 
 
 typedef struct s_party	t_party;

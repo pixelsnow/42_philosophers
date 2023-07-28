@@ -5,7 +5,7 @@ static t_return_value	prepare_philosopher(t_party	*party, unsigned int i)
 	party->philosophers[i].fork_own = &party->forks[i];
 	party->philosophers[i].fork_borrowed
 		= &party->forks[(i + 1) % party->number_of_philosophers];
-	party->philosophers[i].meal_count = 0;
+	party->philosophers[i].meal_count = 0; // TODO: replace with number_of_meals
 	party->philosophers[i].party = party;
 	if (pthread_mutex_init(&(party->philosophers[i].meal_update), NULL) != SUCCESS)
 	 	return (MUTEX_FAIL);
@@ -29,6 +29,7 @@ t_return_value prepare_party(t_party *party)
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
+		// Here we don't check for return value (MUTEX_FAIL)
 		prepare_philosopher(party, i);
 		i++;
 	}

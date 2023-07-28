@@ -58,6 +58,7 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 		party->time_to_sleep = validated_value * 1000;
 	else if (argument == 5)
 		party->number_of_meals = (int)validated_value;
+	// I don't like that the below is here because it repeats it 4 times
 	if (argc == 5)
 		party->number_of_meals = -1;
 	return (SUCCESS);
@@ -97,15 +98,18 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 	ret_val = argument_number_check(argc);
 	if (ret_val == ARG_COUNT_ERROR)
 		return (ARG_COUNT_ERROR);
+	if (argc == 5)
+		party->number_of_meals = -1;
 	while (index < argc)
 	{
 		ret_val = store_arg_if_validated(party, argv[index], index, argc);
+		// curious why we check this? argv[index] != NULL
 		if (ret_val != SUCCESS && argv[index] != NULL)
 		{
 			if (ret_val == TOO_MANY_PHILOS)
 				printf("Recommended philosopher amount should be less or equal to \
 200\n\n");
-			if (ret_val == ARG_NOT_NUMERIC)
+			else if (ret_val == ARG_NOT_NUMERIC)
 				printf("Arguments must be only positive numbers (0 considered not \
 valid)\n\n");
 			print_philo_usage();

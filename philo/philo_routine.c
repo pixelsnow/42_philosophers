@@ -2,12 +2,14 @@
 
 static t_return_value	eat_sleep_think(t_philosopher *philosopher)
 {
+	// TODO: refactor this
 	if (philosopher->party->number_of_philosophers != 1)
 	{
 		pthread_mutex_lock(philosopher->fork_own);
 		print_whats_happening(philosopher, "has taken a fork");
 		pthread_mutex_lock(philosopher->fork_borrowed);
 		print_whats_happening(philosopher, "has taken a fork");
+		// Should this be 2 different mutexes instad?
 		pthread_mutex_lock(&philosopher->meal_update);
 		philosopher->meal_count++;
 		philosopher->time_last_ate = get_current_time();
