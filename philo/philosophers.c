@@ -92,11 +92,13 @@ static int	run_party(t_party *party)
  */
 int	main(int ac, char **av)
 {
-	t_party	party;
+	t_party			party;
+	t_return_value	ret_val;
 
-	if (parse_args(&party, ac, av))
+	ret_val = parse_args(&party, ac, av);
+	if (ret_val != SUCCESS)
 	{
-		return (ERROR);
+		return (ret_val);
 	}
 	// Init
 	if (prepare_party(&party) != SUCCESS)

@@ -7,6 +7,10 @@
 # include <sys/time.h>
 # include <stdlib.h>
 
+# define EXPECT_ARG_COUNT 5
+# define EXPECT_ARG_COUNT_WITH_MEALS 6
+
+
 typedef struct s_party	t_party;
 
 typedef struct s_philosopher
@@ -40,10 +44,13 @@ typedef struct s_party
 	unsigned int		number_of_philosophers_fed;
 }						t_party;
 
+
 typedef enum e_return_value
 {
 	SUCCESS,
 	ERROR,
+	ARG_COUNT_ERROR,
+	ARG_NOT_NUMERIC,
 	MALLOC_FAIL,
 	MUTEX_FAIL,
 	THREAD_FAIL,
