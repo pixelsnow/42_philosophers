@@ -57,7 +57,10 @@ typedef enum e_return_value
 	MUTEX_FAIL,
 	THREAD_FAIL,
 	JOIN_FAIL,
-	SINGLE_PHILO_CASE
+	SINGLE_PHILO_CASE,
+	LIFE_GOES_ON,
+	SOMEONE_DIED,
+	EVERYONE_IS_FED,
 }						t_return_value;
 
 /**

@@ -106,10 +106,10 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 		{
 			if (ret_val == TOO_MANY_PHILOS)
 				printf("Recommended philosopher amount should be less or equal to \
-200\n");
+200\n\n");
 			if (ret_val == ARG_NOT_NUMERIC)
 				printf("Arguments must be only positive numbers (0 considered not \
-				valid)\n");
+valid)\n\n");
 			print_philo_usage();
 			return (ret_val);
 		}

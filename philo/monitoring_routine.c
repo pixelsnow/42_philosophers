@@ -9,7 +9,7 @@
  * @param party A pointer to the t_party structure representing the philosopher party.
  * @return 1 if any philosopher has starved, 0 otherwise.
  */
-int someone_starved(t_party	*party)
+static t_return_value	someone_starved(t_party	*party)
 {
 	unsigned int	i;
 	unsigned long long	curr_time;
@@ -25,11 +25,11 @@ int someone_starved(t_party	*party)
 		if (curr_time - time_philo_last_ate >= party->time_to_die)
 		{
 			print_whats_happening(party->philosophers, "died");
-			return (1);
+			return (SOMEONE_DIED);
 		}
 		i++;
 	}
-	return (0);
+	return (LIFE_GOES_ON);
 }
 /**
  * @brief Checks if every philosopher has reached the number of meals specified.
@@ -42,13 +42,13 @@ int someone_starved(t_party	*party)
  * @return 1 if every philosopher has eaten the specified number of meals or if the
  *         number_of_meals value is negative, 0 otherwise.
  */
-int	everyone_is_fed(t_party	*party)
+static t_return_value	everyone_is_fed(t_party	*party)
 {
 	unsigned int	i;
-	int philo_meal_count;
+	int				philo_meal_count;
 
 	if (party->number_of_meals < 0)
-		return (0);
+		return (LIFE_GOES_ON);
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
@@ -56,10 +56,10 @@ int	everyone_is_fed(t_party	*party)
 		philo_meal_count = party->philosophers[i].meal_count;
 		pthread_mutex_unlock(&(party->philosophers[i].meal_update));
 		if (philo_meal_count < party->number_of_meals)
-			return (0);
+			return (LIFE_GOES_ON);
 		i++;
 	}
-	return (1);
+	return (EVERYONE_IS_FED);
 }
 
 void	*monitoring_routine(void *party_data)
@@ -69,20 +69,18 @@ void	*monitoring_routine(void *party_data)
 	party = (t_party *)party_data;
 	while (1)
 	{
-		if (someone_starved(party))
+		if (someone_starved(party) == SOMEONE_DIED)
 		{
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
-			printf("Monitoring detected DEATH\n");
 			break ;
 		}
-		if (everyone_is_fed(party))
+		if (everyone_is_fed(party) == EVERYONE_IS_FED)
 		{
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
-			printf("Monitoring detected ALL PHILOS ARE FED\n");
 			break ;
 		}
 		custom_usleep(party->time_to_die / 10, party);

@@ -40,12 +40,12 @@ t_return_value prepare_party(t_party *party)
 		i++;
 	}
 	if (pthread_mutex_init(&(party->guard), NULL) != SUCCESS)
-	 	return (MUTEX_FAIL);
+		return (MUTEX_FAIL);
 	if (pthread_mutex_init(&(party->printing), NULL) != SUCCESS)
-	 	return (MUTEX_FAIL);
+		return (MUTEX_FAIL);
 	if (pthread_mutex_init(&(party->dying), NULL) != SUCCESS)
-	 	return (MUTEX_FAIL);
+		return (MUTEX_FAIL);
 	if (pthread_mutex_init(&(party->reporting_enough_meals), NULL) != SUCCESS)
-	 	return (MUTEX_FAIL);
+		return (MUTEX_FAIL);
 	return (SUCCESS);
 }
