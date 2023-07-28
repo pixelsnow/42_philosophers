@@ -44,7 +44,7 @@ static t_return_value	join_monitoring_thread(t_party *party)
 	if (pthread_join(party->monitoring_thread, NULL) != SUCCESS)
 	{
 		printf("Failed to join monitoring thread\n");
-		return (ERROR);
+		return (JOIN_FAIL);
 	}
 	return (SUCCESS);
 }
@@ -77,8 +77,10 @@ static t_return_value	run_party(t_party *party)
 		return (THREAD_FAIL);
 	}
 	pthread_mutex_unlock(&(party->guard));
-	join_monitoring_thread(party);
-	join_philosopher_threads(party);
+	if (join_monitoring_thread(party) == JOIN_FAIL)
+		return (JOIN_FAIL);
+	if (join_philosopher_threads(party) == JOIN_FAIL)
+		return (JOIN_FAIL);
 	return (SUCCESS);
 }
 
