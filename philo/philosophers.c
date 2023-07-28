@@ -80,7 +80,10 @@ static t_return_value	run_party(t_party *party)
 	}
 	pthread_mutex_unlock(&(party->guard));
 	if (join_monitoring_thread(party) == JOIN_FAIL)
+	 {
+		join_philosopher_threads(party);
 		return (JOIN_FAIL);
+	 }
 	if (join_philosopher_threads(party) == JOIN_FAIL)
 		return (JOIN_FAIL);
 	return (SUCCESS);

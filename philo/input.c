@@ -111,7 +111,7 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 				printf("Arguments must be only positive numbers (0 considered not \
 				valid)\n");
 			print_philo_usage();
-			return (ARG_NOT_NUMERIC);
+			return (ret_val);
 		}
 		index++;
 	}

@@ -6,7 +6,7 @@ void	print_whats_happening(t_philosopher *philosopher, char *event)
 	unsigned long long	timestamp;
 
 	timestamp = get_current_time() - philosopher->party->party_start_time;
-	timestamp /= 1000ULL;  // cast to ULL to avoid potential int overflow
+	timestamp /= 1000ULL;
 	pthread_mutex_lock(&(philosopher->party->dying));
 	if (philosopher->party->someone_dead == 0)
 		printf("%llu\t%d\t%s\n", timestamp, philosopher->index + 1, event);
