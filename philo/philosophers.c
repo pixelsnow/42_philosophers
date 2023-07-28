@@ -17,13 +17,15 @@ static t_return_value	join_philosopher_threads(t_party *party)
 {
 	unsigned int	i;
 
-	for (i = 0; i < party->number_of_philosophers; i++)
+	i = 0;
+	while (i < party->number_of_philosophers)
 	{
 		if (pthread_join(party->philosophers[i].thread, NULL) != SUCCESS)
 		{
 			printf("Failed to join philosopher thread %u\n", i);
 			return (ERROR);
 		}
+		i++;
 	}
 	return (SUCCESS);
 }

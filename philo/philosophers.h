@@ -9,6 +9,7 @@
 
 # define EXPECT_ARG_COUNT 5
 # define EXPECT_ARG_COUNT_WITH_MEALS 6
+# define MAX_AMOUNT_PHILO_ALLOWED 500
 
 
 typedef struct s_party	t_party;
@@ -51,6 +52,7 @@ typedef enum e_return_value
 	ERROR,
 	ARG_COUNT_ERROR,
 	ARG_NOT_NUMERIC,
+	TOO_MANY_PHILOS,
 	MALLOC_FAIL,
 	MUTEX_FAIL,
 	THREAD_FAIL,
