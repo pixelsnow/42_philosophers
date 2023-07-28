@@ -18,10 +18,12 @@ t_return_value prepare_party(t_party *party)
 	
 	party->someone_dead = 0;
 	party->number_of_philosophers_fed = 0;
-	party->philosophers = malloc(sizeof(t_philosopher) * party->number_of_philosophers);
+	party->philosophers = malloc(sizeof(t_philosopher) * \
+		party->number_of_philosophers);
 	if (party->philosophers == NULL)
 		return (MALLOC_FAIL);
-	party->forks = malloc(sizeof(pthread_mutex_t) * party->number_of_philosophers);
+	party->forks = malloc(sizeof(pthread_mutex_t) * \
+		party->number_of_philosophers);
 	if (party->forks == NULL)
 		return (MALLOC_FAIL);
 	i = 0;

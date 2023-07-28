@@ -49,7 +49,7 @@ static t_return_value	join_monitoring_thread(t_party *party)
 	return (SUCCESS);
 }
 
-static int	run_party(t_party *party)
+static t_return_value	run_party(t_party *party)
 {
 	unsigned int	i;
 
@@ -57,10 +57,10 @@ static int	run_party(t_party *party)
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
-		if (start_philosopher(party, i) == ERROR)
+		if (start_philosopher(party, i) == THREAD_FAIL)
 		{
 			pthread_mutex_unlock(&(party->guard));
-			break ;
+			return (THREAD_FAIL);
 		}
 		i++;
 	}
@@ -71,7 +71,11 @@ static int	run_party(t_party *party)
 		party->philosophers[i].time_last_ate = party->party_start_time;
 		i++;
 	}
-	start_monitoring(party);
+	if (start_monitoring(party) == THREAD_FAIL)
+	{
+		pthread_mutex_unlock(&(party->guard));
+		return (THREAD_FAIL);
+	}
 	pthread_mutex_unlock(&(party->guard));
 	join_monitoring_thread(party);
 	join_philosopher_threads(party);
@@ -97,20 +101,13 @@ int	main(int ac, char **av)
 
 	ret_val = parse_args(&party, ac, av);
 	if (ret_val != SUCCESS)
-	{
 		return (ret_val);
-	}
-	// Init
-	if (prepare_party(&party) != SUCCESS)
-	{
-		// prepare_party currenty actually always returns success (i think)
-		return (ERROR);
-	}
-	if (run_party(&party))
-	{
-		// run_party currenty actually always returns success (i think)
-		return (ERROR);
-	}
+	ret_val = prepare_party(&party);
+	if (ret_val != SUCCESS)
+		return (ret_val);
+	ret_val = run_party(&party);
+	if (ret_val != SUCCESS)
+		return (ret_val);
 	clean_up(&party);
 	return (SUCCESS);
 }
