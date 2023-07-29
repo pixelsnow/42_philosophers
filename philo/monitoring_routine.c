@@ -1,17 +1,9 @@
 #include "philosophers.h"
-/**
- * @brief Checks if any philosopher has starved.
- *
- * This function checks each philosopher in the party and determines if any
- * philosopher has starved. It calculates the time since the philosopher last ate
- * and compares it with the time_to_die value to detect starvation.
- *
- * @param party A pointer to the t_party structure representing the philosopher party.
- * @return 1 if any philosopher has starved, 0 otherwise.
- */
-static t_return_value	someone_starved(t_party	*party)
+
+
+static t_return_value	someone_starved(t_party *party)
 {
-	unsigned int	i;
+	unsigned int		i;
 	unsigned long long	curr_time;
 	unsigned long long	time_philo_last_ate;
 
@@ -31,18 +23,8 @@ static t_return_value	someone_starved(t_party	*party)
 	}
 	return (LIFE_GOES_ON);
 }
-/**
- * @brief Checks if every philosopher has reached the number of meals specified.
- *
- * This function checks each philosopher's meal count and compares it with the
- * number_of_meals value to determine if every philosopher has eaten the specified
- * number of meals.
- *
- * @param party A pointer to the t_party structure representing the philosopher party.
- * @return 1 if every philosopher has eaten the specified number of meals or if the
- *         number_of_meals value is negative, 0 otherwise.
- */
-static t_return_value	everyone_is_fed(t_party	*party)
+
+static t_return_value	everyone_is_fed(t_party *party)
 {
 	unsigned int	i;
 	int				philo_meal_count;
