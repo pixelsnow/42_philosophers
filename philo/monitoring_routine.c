@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:32 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/29 22:44:57 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/07/30 00:19:55 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ static t_return_value	someone_starved(t_party *party)
 		pthread_mutex_unlock(&(party->philosophers[i].meal_update));
 		if (curr_time - time_philo_last_ate >= party->time_to_die)
 		{
-			print_whats_happening(party->philosophers, "died");
+			printf("philo %u is STARVING\n", party->philosophers[i].index);
+			printf("philo %u meal count is %d\n", party->philosophers[i].index,
+				party->philosophers[i].meal_count);
+			print_whats_happening(&(party->philosophers[i]), "died");
 			return (SOMEONE_DIED);
 		}
 		i++;
@@ -67,7 +70,7 @@ void	*monitoring_routine(void *party_data)
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
-			pthread_mutex_lock(&(party->printing));
+			/* pthread_mutex_lock(&(party->printing)); */
 			break ;
 		}
 		if (everyone_is_fed(party) == EVERYONE_IS_FED)
@@ -75,7 +78,7 @@ void	*monitoring_routine(void *party_data)
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
-			pthread_mutex_lock(&(party->printing));
+			/* pthread_mutex_lock(&(party->printing)); */
 			break ;
 		}
 		custom_usleep(party->time_to_die / 10, party);

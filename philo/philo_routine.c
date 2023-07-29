@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:53 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/29 23:43:34 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/07/30 00:09:35 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ static t_return_value	eat_sleep_think(t_philosopher *philosopher)
 void	*philosopher_routine(void *philosopher_data)
 {
 	t_philosopher	*philosopher;
-	int				someone_dead;
+	/* int				someone_dead; */
 	t_return_value	ret_val;
 
-	someone_dead = 0;
+	/* someone_dead = 0; */
 	philosopher = (t_philosopher *)philosopher_data;
 	pthread_mutex_lock(&(philosopher->party->guard));
 	pthread_mutex_unlock(&(philosopher->party->guard));
@@ -78,5 +78,6 @@ void	*philosopher_routine(void *philosopher_data)
 			break ;
 		}
 	}
+	printf("philo %d is returning NULL\n", philosopher->index + 1);
 	return (NULL);
 }
