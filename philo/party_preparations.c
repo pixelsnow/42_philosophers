@@ -30,7 +30,8 @@ t_return_value prepare_party(t_party *party)
 	while (i < party->number_of_philosophers)
 	{
 		// Here we don't check for return value (MUTEX_FAIL)
-		prepare_philosopher(party, i);
+		if (prepare_philosopher(party, i) != SUCCESS)
+			return (MUTEX_FAIL);
 		i++;
 	}
 	i = 0;
@@ -41,8 +42,6 @@ t_return_value prepare_party(t_party *party)
 		i++;
 	}
 	if (pthread_mutex_init(&(party->guard), NULL) != SUCCESS)
-		return (MUTEX_FAIL);
-	if (pthread_mutex_init(&(party->printing), NULL) != SUCCESS)
 		return (MUTEX_FAIL);
 	if (pthread_mutex_init(&(party->dying), NULL) != SUCCESS)
 		return (MUTEX_FAIL);

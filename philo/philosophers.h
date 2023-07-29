@@ -38,7 +38,6 @@ typedef struct s_party
 	pthread_t 			monitoring_thread;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		guard; // INITIALIZED
-	pthread_mutex_t		printing; // TODO include everywhere
 	pthread_mutex_t		dying; // someone_dead
 	pthread_mutex_t		reporting_enough_meals; // number_of_philosophers_fed
 	unsigned int		someone_dead;

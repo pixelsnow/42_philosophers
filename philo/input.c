@@ -37,7 +37,7 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 	otherwise ERROR.
  */
 static t_return_value	store_arg_if_validated(t_party *party, char *string,
-		int argument, int argc)
+		int argument)
 {
 	int	validated_value;
 
@@ -59,8 +59,6 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 	else if (argument == 5)
 		party->number_of_meals = (int)validated_value;
 	// I don't like that the below is here because it repeats it 4 times
-	if (argc == 5)
-		party->number_of_meals = -1;
 	return (SUCCESS);
 }
 
@@ -102,9 +100,8 @@ t_return_value	parse_args(t_party *party, int argc, char **argv)
 		party->number_of_meals = -1;
 	while (index < argc)
 	{
-		ret_val = store_arg_if_validated(party, argv[index], index, argc);
-		// curious why we check this? argv[index] != NULL
-		if (ret_val != SUCCESS && argv[index] != NULL)
+		ret_val = store_arg_if_validated(party, argv[index], index);
+		if (ret_val != SUCCESS)
 		{
 			if (ret_val == TOO_MANY_PHILOS)
 				printf("Recommended philosopher amount should be less or equal to \

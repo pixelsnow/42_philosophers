@@ -85,6 +85,5 @@ void	*monitoring_routine(void *party_data)
 		}
 		custom_usleep(party->time_to_die / 10, party);
 	}
-    pthread_mutex_lock(&(party->printing));
 	return (NULL);
 }
