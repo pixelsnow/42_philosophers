@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/29 22:10:37 by vvagapov          #+#    #+#             */
+/*   Updated: 2023/07/29 23:29:09 by vvagapov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
@@ -10,7 +22,7 @@
 # define EXPECT_ARG_COUNT 5
 # define EXPECT_ARG_COUNT_WITH_MEALS 6
 # define MAX_AMOUNT_PHILO_ALLOWED 200
-
+# define MAX_TIME_ALLOWED 9223372036854775
 
 typedef struct s_party	t_party;
 
@@ -39,11 +51,9 @@ typedef struct s_party
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		guard; // INITIALIZED
 	pthread_mutex_t		dying; // someone_dead
-	pthread_mutex_t		reporting_enough_meals; // number_of_philosophers_fed
+	pthread_mutex_t		printing;
 	unsigned int		someone_dead;
-	unsigned int		number_of_philosophers_fed;
 }						t_party;
-
 
 typedef enum e_return_value
 {
@@ -64,35 +74,31 @@ typedef enum e_return_value
 
 
 // input.c 
-
 t_return_value		parse_args(t_party *party, int argc, char **argv);
 
-
 // utils.c 
-
 unsigned long long	get_current_time(void);
-void				custom_usleep(unsigned long long duration, t_party *party);
+t_return_value		custom_usleep(unsigned long long duration, t_party *party);
 void				print_whats_happening(t_philosopher *philosopher, char *event);
 
 // party_preparation.c
 t_return_value		prepare_party(t_party *party);
 
-
 // start_threads.c
+t_return_value		start_philosophers(t_party *party);
+t_return_value		start_monitoring(t_party *party);
 
-t_return_value		start_philosopher(t_party	*party, unsigned int i);
-t_return_value		start_monitoring(t_party	*party);
-
+// join_threads.c
+t_return_value		join_philosopher_threads(t_party *party, unsigned int last_index);
+t_return_value		join_monitoring_thread(t_party *party);
 
 // philo_routine.c
-
 void				*philosopher_routine(void *philosopher_data);
 
-
 // monitoring_routine.c
-
 void				*monitoring_routine(void *party_data);
 
+// cleanup.c
 void				free_memory(t_party	*party);
 void				destroy_mutexes(t_party	*party);
 t_return_value		quit_gracefully(t_party *party, t_return_value	ret_val);

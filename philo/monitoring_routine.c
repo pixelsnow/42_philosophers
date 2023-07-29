@@ -1,5 +1,16 @@
-#include "philosophers.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitoring_routine.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/29 22:12:32 by vvagapov          #+#    #+#             */
+/*   Updated: 2023/07/29 22:44:57 by vvagapov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "philosophers.h"
 
 static t_return_value	someone_starved(t_party *party)
 {
@@ -56,6 +67,7 @@ void	*monitoring_routine(void *party_data)
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
+			pthread_mutex_lock(&(party->printing));
 			break ;
 		}
 		if (everyone_is_fed(party) == EVERYONE_IS_FED)
@@ -63,6 +75,7 @@ void	*monitoring_routine(void *party_data)
 			pthread_mutex_lock(&(party->dying));
 			party->someone_dead = 1;
 			pthread_mutex_unlock(&(party->dying));
+			pthread_mutex_lock(&(party->printing));
 			break ;
 		}
 		custom_usleep(party->time_to_die / 10, party);

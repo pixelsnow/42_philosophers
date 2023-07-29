@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/29 22:12:53 by vvagapov          #+#    #+#             */
+/*   Updated: 2023/07/29 23:43:34 by vvagapov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
 static t_return_value	eat_sleep_think(t_philosopher *philosopher)
@@ -11,15 +23,29 @@ static t_return_value	eat_sleep_think(t_philosopher *philosopher)
 		print_whats_happening(philosopher, "has taken a fork");
 		// Should this be 2 different mutexes instad?
 		pthread_mutex_lock(&philosopher->meal_update);
-		philosopher->meal_count++;
 		philosopher->time_last_ate = get_current_time();
 		pthread_mutex_unlock(&philosopher->meal_update);
 		print_whats_happening(philosopher, "is eating");
-		custom_usleep(philosopher->party->time_to_eat, philosopher->party);
+		if (custom_usleep(philosopher->party->time_to_eat, philosopher->party)
+				!= SUCCESS)
+		{
+			printf("philo %d detected that someone died\n", philosopher->index + 1);
+			pthread_mutex_unlock(philosopher->fork_own);
+			pthread_mutex_unlock(philosopher->fork_borrowed);
+			return (SOMEONE_DIED);
+		}
 		pthread_mutex_unlock(philosopher->fork_own);
 		pthread_mutex_unlock(philosopher->fork_borrowed);
+		pthread_mutex_lock(&philosopher->meal_update);
+		philosopher->meal_count++;
+		pthread_mutex_unlock(&philosopher->meal_update);
 		print_whats_happening(philosopher, "is sleeping");
-		custom_usleep(philosopher->party->time_to_sleep, philosopher->party);
+		if (custom_usleep(philosopher->party->time_to_sleep, philosopher->party)
+				!= SUCCESS)
+		{
+			printf("philo %d detected that someone died\n", philosopher->index + 1);
+			return (SOMEONE_DIED);
+		}
 		print_whats_happening(philosopher, "is thinking");
 		return (SUCCESS);
 	}
@@ -30,6 +56,7 @@ void	*philosopher_routine(void *philosopher_data)
 {
 	t_philosopher	*philosopher;
 	int				someone_dead;
+	t_return_value	ret_val;
 
 	someone_dead = 0;
 	philosopher = (t_philosopher *)philosopher_data;
@@ -40,16 +67,16 @@ void	*philosopher_routine(void *philosopher_data)
 		custom_usleep(philosopher->party->time_to_eat / 10, philosopher->party);
 	while (1)
 	{
-		if (eat_sleep_think(philosopher) == SINGLE_PHILO_CASE)
+		ret_val = eat_sleep_think(philosopher);
+		if (ret_val == SINGLE_PHILO_CASE)
 		{
 			print_whats_happening(philosopher, "has taken a fork");
 			break ;
 		}
-		pthread_mutex_lock(&(philosopher->party->dying));
-		someone_dead = philosopher->party->someone_dead;
-		pthread_mutex_unlock(&(philosopher->party->dying));
-		if (someone_dead != 0)
+		if (ret_val == SOMEONE_DIED)
+		{
 			break ;
+		}
 	}
 	return (NULL);
 }

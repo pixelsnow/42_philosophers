@@ -1,63 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/29 22:10:43 by vvagapov          #+#    #+#             */
+/*   Updated: 2023/07/29 22:15:03 by vvagapov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
-/**
- * @brief Joins all philosopher threads.
- *
- * This function is responsible for joining all the philosopher threads created
- * by the party. It iterates through the `party->philosophers` array and calls
- * `pthread_join` on each philosopher's thread. If an error occurs during
- * joining, it prints an error message indicating which philosopher thread
- * failed to join.
- */
-static t_return_value	join_philosopher_threads(t_party *party, unsigned int last_index)
+static void	set_party_start_time(t_party *party)
 {
 	unsigned int	i;
-
-	i = 0;
-	while (i <= last_index)
-	{
-		if (pthread_join(party->philosophers[i].thread, NULL) != SUCCESS)
-		{
-			printf("Failed to join philosopher thread %u\n", i);
-			return (ERROR);
-		}
-		i++;
-	}
-	return (SUCCESS);
-}
-
-/**
- * @brief Joins the monitoring thread.
- *
- * This function is responsible for joining the monitoring thread created by
- * the party. It calls `pthread_join` on the `party->monitoring_thread`. If an
- * error occurs during joining, it prints an error message.
- */
-static t_return_value	join_monitoring_thread(t_party *party)
-{
-	if (pthread_join(party->monitoring_thread, NULL) != SUCCESS)
-	{
-		printf("Failed to join monitoring thread\n");
-		return (JOIN_FAIL);
-	}
-	return (SUCCESS);
-}
-
-static t_return_value	run_party(t_party *party)
-{
-	unsigned int	i;
-
-	pthread_mutex_lock(&(party->guard));
-	i = 0;
-	while (i < party->number_of_philosophers)
-	{
-		if (start_philosopher(party, i) == THREAD_FAIL)
-		{
-			pthread_mutex_unlock(&(party->guard));
-			return (THREAD_FAIL);
-		}
-		i++;
-	}
+	
 	party->party_start_time = get_current_time();
 	i = 0;
 	while (i < party->number_of_philosophers)
@@ -65,23 +23,31 @@ static t_return_value	run_party(t_party *party)
 		party->philosophers[i].time_last_ate = party->party_start_time;
 		i++;
 	}
-	if (start_monitoring(party) == THREAD_FAIL)
+}
+
+/*
+ * This function runs the main party process:
+ *		- starts philosopher threads and monitoring thread
+ *		- joins all the threads when they are done running
+ * Guard mutex is used to synchronise the threads.
+ */
+static t_return_value	run_party(t_party *party)
+{
+	pthread_mutex_lock(&(party->guard));
+	if (start_philosophers(party) != SUCCESS || start_monitoring(party) != SUCCESS)
 	{
 		pthread_mutex_unlock(&(party->guard));
 		return (THREAD_FAIL);
 	}
+	set_party_start_time(party);
 	pthread_mutex_unlock(&(party->guard));
-	if (join_monitoring_thread(party) == JOIN_FAIL)
+	if (join_monitoring_thread(party) != SUCCESS ||
+		join_philosopher_threads(party, party->number_of_philosophers) != SUCCESS)
 	{
-		join_philosopher_threads(party, party->number_of_philosophers - 1);
 		return (JOIN_FAIL);
 	}
-	if (join_philosopher_threads(party, party->number_of_philosophers - 1) == JOIN_FAIL)
-		return (JOIN_FAIL);
 	return (SUCCESS);
 }
-
-
 
 /*
  * This is the main function of the program. It initializes the `t_party`
@@ -100,10 +66,13 @@ int	main(int ac, char **av)
 		return (ret_val);
 	ret_val = prepare_party(&party);
 	if (ret_val != SUCCESS)
-		return (ret_val);
+		return (quit_gracefully(&party, ret_val));
 	ret_val = run_party(&party);
 	if (ret_val != SUCCESS)
-		return (ret_val);
+	{
+		join_philosopher_threads(&party, party.number_of_philosophers);
+		join_monitoring_thread(&party);
+	}
 	clean_up(&party);
 	return (SUCCESS);
 }

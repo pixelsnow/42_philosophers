@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/29 22:12:20 by vvagapov          #+#    #+#             */
+/*   Updated: 2023/07/29 22:55:38 by vvagapov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philosophers.h"
 
@@ -14,6 +24,8 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 	while (*str >= '0' && *str <= '9')
 	{
 		result = result * 10 + *str - '0';
+		if (result > MAX_TIME_ALLOWED)
+			return (0);
 		str++;
 	}
 	if (*str != '\0')
@@ -22,19 +34,12 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 }
 
 /**
- * @brief Store and validate an argument for the party configuration.
- *
- * @param party The party struct where the validated value will be stored.
- * @param string The input string containing the argument value.
- * @param argument The index of the argument (1-based).
- * @param argc The total number of command-line arguments.
- * @return SUCCESS if the argument is valid and successfully stored,
-	otherwise ERROR.
+ * Stores and validates an argument for the party configuration
  */
 static t_return_value	store_arg_if_validated(t_party *party, char *string,
 		int argument)
 {
-	int	validated_value;
+	unsigned long long	validated_value;
 
 	validated_value = ascii_to_positive_int(string);
 	if (validated_value == 0)
@@ -53,7 +58,6 @@ static t_return_value	store_arg_if_validated(t_party *party, char *string,
 		party->time_to_sleep = validated_value * 1000;
 	else if (argument == 5)
 		party->number_of_meals = (int)validated_value;
-	// I don't like that the below is here because it repeats it 4 times
 	return (SUCCESS);
 }
 
@@ -74,40 +78,35 @@ static t_return_value	argument_number_check(int argc)
 	return (ARG_COUNT_ERROR);
 }
 
-/**
- * @brief Check if number of arguments is correct and are positive numerical values
- * 
- * @param party Struct organizing the party
- * @param argc
- * @param argv 
- * @return	SUCCESS or ERROR
- */
 t_return_value	parse_args(t_party *party, int argc, char **argv)
 {
 	t_return_value	ret_val;
-	int				index;
+	int				i;
 
-	index = 1;
+	i = 1;
 	ret_val = argument_number_check(argc);
 	if (ret_val == ARG_COUNT_ERROR)
 		return (ARG_COUNT_ERROR);
 	if (argc == 5)
 		party->number_of_meals = -1;
-	while (index < argc)
+	while (i < argc)
 	{
-		ret_val = store_arg_if_validated(party, argv[index], index);
+		ret_val = store_arg_if_validated(party, argv[i], i);
 		if (ret_val != SUCCESS)
 		{
 			if (ret_val == TOO_MANY_PHILOS)
 				printf("Recommended philosopher amount should be less or equal to \
-200\n\n");
+%d\n\n", MAX_AMOUNT_PHILO_ALLOWED);
 			else if (ret_val == ARG_NOT_NUMERIC)
 				printf("Arguments must be only positive numbers (0 considered not \
-valid)\n\n");
+valid), max time allowed is %ld\n\n", MAX_TIME_ALLOWED);
 			print_philo_usage();
 			return (ret_val);
 		}
-		index++;
+		i++;
 	}
+	printf("time_to_die: %llu\n", party->time_to_die);
+	printf("time_to_eat: %llu\n", party->time_to_eat);
+	printf("time_to_sleep: %llu\n", party->time_to_sleep);
 	return (SUCCESS);
 }
