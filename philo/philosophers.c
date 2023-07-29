@@ -8,17 +8,13 @@
  * `pthread_join` on each philosopher's thread. If an error occurs during
  * joining, it prints an error message indicating which philosopher thread
  * failed to join.
- *
- * @param party Pointer to the `t_party` struct holding party information
- * @return Returns SUCCESS if all philosopher threads are joined successfully,
-	otherwise FAILED.
  */
-static t_return_value	join_philosopher_threads(t_party *party)
+static t_return_value	join_philosopher_threads(t_party *party, unsigned int last_index)
 {
 	unsigned int	i;
 
 	i = 0;
-	while (i < party->number_of_philosophers)
+	while (i <= last_index)
 	{
 		if (pthread_join(party->philosophers[i].thread, NULL) != SUCCESS)
 		{
@@ -36,10 +32,6 @@ static t_return_value	join_philosopher_threads(t_party *party)
  * This function is responsible for joining the monitoring thread created by
  * the party. It calls `pthread_join` on the `party->monitoring_thread`. If an
  * error occurs during joining, it prints an error message.
- *
- * @param party Pointer to the `t_party` struct holding party information
- * @return Returns SUCCESS if all philosopher threads are joined successfully,
-	otherwise FAILED.
  */
 static t_return_value	join_monitoring_thread(t_party *party)
 {
@@ -81,30 +73,27 @@ static t_return_value	run_party(t_party *party)
 	pthread_mutex_unlock(&(party->guard));
 	if (join_monitoring_thread(party) == JOIN_FAIL)
 	{
-		join_philosopher_threads(party);
+		join_philosopher_threads(party, party->number_of_philosophers - 1);
 		return (JOIN_FAIL);
 	}
-	if (join_philosopher_threads(party) == JOIN_FAIL)
+	if (join_philosopher_threads(party, party->number_of_philosophers - 1) == JOIN_FAIL)
 		return (JOIN_FAIL);
 	return (SUCCESS);
 }
 
-/**
- * @brief Entry point of the program.
- *
+
+
+/*
  * This is the main function of the program. It initializes the `t_party`
  * struct, parses the command-line arguments using `parse_args`, prepares the
  * party using `prepare_party`, runs the party using `run_party`, and finally
  * cleans up the resources using `clean_up`.
- *
- * @param ac Number of command-line arguments
- * @param av Array of command-line argument strings
- * @return int `SUCCESS` if the program runs successfully, otherwise `ERROR`
  */
 int	main(int ac, char **av)
 {
 	t_party			party;
 	t_return_value	ret_val;
+	// rename to status or result
 
 	ret_val = parse_args(&party, ac, av);
 	if (ret_val != SUCCESS)

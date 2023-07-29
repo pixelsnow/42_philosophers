@@ -62,40 +62,40 @@ typedef enum e_return_value
 	EVERYONE_IS_FED,
 }						t_return_value;
 
-/**
- * Contained in input.c 
- */
+
+// input.c 
+
 t_return_value		parse_args(t_party *party, int argc, char **argv);
 
-/**
- * Contained in utils.c 
- */
+
+// utils.c 
+
 unsigned long long	get_current_time(void);
 void				custom_usleep(unsigned long long duration, t_party *party);
 void				print_whats_happening(t_philosopher *philosopher, char *event);
 
-/**
- * Contained in party_preparation
- */
+// party_preparation.c
 t_return_value		prepare_party(t_party *party);
 
-/**
- * Contained in start_threads.c
- */
+
+// start_threads.c
+
 t_return_value		start_philosopher(t_party	*party, unsigned int i);
 t_return_value		start_monitoring(t_party	*party);
 
-/**
- * Contained in philo_routine.c
- */
+
+// philo_routine.c
+
 void				*philosopher_routine(void *philosopher_data);
 
-/**
- *	Contained in monitoring_routine.c
- */
+
+// monitoring_routine.c
+
 void				*monitoring_routine(void *party_data);
 
-
+void				free_memory(t_party	*party);
+void				destroy_mutexes(t_party	*party);
+t_return_value		quit_gracefully(t_party *party, t_return_value	ret_val);
 void				clean_up(t_party	*party); 
 
 #endif

@@ -29,7 +29,6 @@ t_return_value prepare_party(t_party *party)
 	i = 0;
 	while (i < party->number_of_philosophers)
 	{
-		// Here we don't check for return value (MUTEX_FAIL)
 		if (prepare_philosopher(party, i) != SUCCESS)
 			return (MUTEX_FAIL);
 		i++;

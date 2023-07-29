@@ -2,14 +2,9 @@
 
 #include "philosophers.h"
 
-/**
-
-	* @brief Convert a string containing an ASCII representation of a positive integer to an unsigned long long value.
- *
-
-	* @param str The input string containing the ASCII representation of the integer.
-
-	* @return The converted unsigned long long value. Returns 0 if the conversion fails or the input string is not a valid positive integer.
+/*
+ * Converts a string containing an ASCII representation of a positive integer
+ * to an unsigned long long value. If value is invalid, return 0.
  */
 static unsigned long long	ascii_to_positive_int(const char *str)
 {
