@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:38 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/03 05:24:43 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 05:26:37 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ t_return_value prepare_party(t_party *party)
 		i++;
 	}
 	if (pthread_mutex_init(&(party->guard), NULL) != SUCCESS
-			|| pthread_mutex_init(&(party->dying), NULL) != SUCCESS
-			|| pthread_mutex_init(&(party->printing), NULL) != SUCCESS)
+			|| pthread_mutex_init(&(party->dying), NULL) != SUCCESS)
 		return (MUTEX_FAIL);
 	return (SUCCESS);
 }

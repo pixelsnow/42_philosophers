@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:37 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/30 00:16:04 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 05:26:41 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_party
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		guard; // INITIALIZED
 	pthread_mutex_t		dying; // someone_dead
-	pthread_mutex_t		printing;
 	unsigned int		someone_dead;
 }						t_party;
 

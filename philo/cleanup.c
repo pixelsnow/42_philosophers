@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:50 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/29 22:39:17 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 05:26:26 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	destroy_mutexes(t_party	*party)
 	}
 	pthread_mutex_destroy(&(party->guard));
 	pthread_mutex_destroy(&(party->dying));
-	pthread_mutex_destroy(&(party->printing));
 }
 
 t_return_value	quit_gracefully(t_party *party, t_return_value	ret_val)
