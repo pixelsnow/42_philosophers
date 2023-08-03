@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:43 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/29 22:15:03 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 05:31:03 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,9 @@ int	main(int ac, char **av)
 	ret_val = run_party(&party);
 	if (ret_val != SUCCESS)
 	{
-		join_philosopher_threads(&party, party.number_of_philosophers);
-		join_monitoring_thread(&party);
+		quit_gracefully(&party, ret_val);
+		/* join_philosopher_threads(&party, party.number_of_philosophers);
+		join_monitoring_thread(&party); */
 		 // return?
 	}
 	clean_up(&party);

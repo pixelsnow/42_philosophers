@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:50 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/03 05:26:26 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 05:30:58 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ t_return_value	quit_gracefully(t_party *party, t_return_value	ret_val)
 		destroy_mutexes(party);
 		free_memory(party);
 	}
-/* 	else if (ret_val == THREAD_FAIL)
+	else if (ret_val == THREAD_FAIL)
 	{
 		// no, it can't be done here because we don't know the last index, or does it matter?
 		join_philosopher_threads(party, party->number_of_philosophers);
 		join_monitoring_thread(party);
-	} */
+	}
 	return (ret_val);
 }
 
