@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:53 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/30 00:09:35 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 04:36:59 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,41 @@
 static t_return_value	eat_sleep_think(t_philosopher *philosopher)
 {
 	// TODO: refactor this
-	if (philosopher->party->number_of_philosophers != 1)
+	if (philosopher->party->number_of_philosophers == 1)
+	return (SINGLE_PHILO_CASE);
+
+	pthread_mutex_lock(philosopher->fork_own);
+	print_whats_happening(philosopher, "has taken a fork");
+	pthread_mutex_lock(philosopher->fork_borrowed);
+	print_whats_happening(philosopher, "has taken a fork");
+	// Should this be 2 different mutexes instad?
+	pthread_mutex_lock(&philosopher->meal_update);
+	philosopher->time_last_ate = get_current_time();
+	pthread_mutex_unlock(&philosopher->meal_update);
+	print_whats_happening(philosopher, "is eating");
+	// Lionel doesn't have this..
+	if (custom_usleep(philosopher->party->time_to_eat, philosopher->party)
+			!= SUCCESS)
 	{
-		pthread_mutex_lock(philosopher->fork_own);
-		print_whats_happening(philosopher, "has taken a fork");
-		pthread_mutex_lock(philosopher->fork_borrowed);
-		print_whats_happening(philosopher, "has taken a fork");
-		// Should this be 2 different mutexes instad?
-		pthread_mutex_lock(&philosopher->meal_update);
-		philosopher->time_last_ate = get_current_time();
-		pthread_mutex_unlock(&philosopher->meal_update);
-		print_whats_happening(philosopher, "is eating");
-		if (custom_usleep(philosopher->party->time_to_eat, philosopher->party)
-				!= SUCCESS)
-		{
-			printf("philo %d detected that someone died\n", philosopher->index + 1);
-			pthread_mutex_unlock(philosopher->fork_own);
-			pthread_mutex_unlock(philosopher->fork_borrowed);
-			return (SOMEONE_DIED);
-		}
+		//printf("philo %d detected that someone died\n", philosopher->index + 1);
 		pthread_mutex_unlock(philosopher->fork_own);
 		pthread_mutex_unlock(philosopher->fork_borrowed);
-		pthread_mutex_lock(&philosopher->meal_update);
-		philosopher->meal_count++;
-		pthread_mutex_unlock(&philosopher->meal_update);
-		print_whats_happening(philosopher, "is sleeping");
-		if (custom_usleep(philosopher->party->time_to_sleep, philosopher->party)
-				!= SUCCESS)
-		{
-			printf("philo %d detected that someone died\n", philosopher->index + 1);
-			return (SOMEONE_DIED);
-		}
-		print_whats_happening(philosopher, "is thinking");
-		return (SUCCESS);
+		return (SOMEONE_DIED);
 	}
-	return (SINGLE_PHILO_CASE);
+	pthread_mutex_unlock(philosopher->fork_own);
+	pthread_mutex_unlock(philosopher->fork_borrowed);
+	pthread_mutex_lock(&philosopher->meal_update);
+	philosopher->meal_count++;
+	pthread_mutex_unlock(&philosopher->meal_update);
+	print_whats_happening(philosopher, "is sleeping");
+	if (custom_usleep(philosopher->party->time_to_sleep, philosopher->party)
+			!= SUCCESS)
+	{
+		// printf("philo %d detected that someone died\n", philosopher->index + 1);
+		return (SOMEONE_DIED);
+	}
+	print_whats_happening(philosopher, "is thinking");
+	return (SUCCESS);
 }
 
 void	*philosopher_routine(void *philosopher_data)
@@ -63,7 +63,7 @@ void	*philosopher_routine(void *philosopher_data)
 	pthread_mutex_lock(&(philosopher->party->guard));
 	pthread_mutex_unlock(&(philosopher->party->guard));
 	print_whats_happening(philosopher, "is thinking");
-	if (philosopher->index % 2 == 0)
+	if (philosopher->index % 2 == 1)
 		custom_usleep(philosopher->party->time_to_eat / 10, philosopher->party);
 	while (1)
 	{
@@ -78,6 +78,6 @@ void	*philosopher_routine(void *philosopher_data)
 			break ;
 		}
 	}
-	printf("philo %d is returning NULL\n", philosopher->index + 1);
+	//printf("philo %d is returning NULL\n", philosopher->index + 1);
 	return (NULL);
 }

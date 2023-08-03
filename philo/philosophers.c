@@ -72,6 +72,7 @@ int	main(int ac, char **av)
 	{
 		join_philosopher_threads(&party, party.number_of_philosophers);
 		join_monitoring_thread(&party);
+		 // return?
 	}
 	clean_up(&party);
 	return (SUCCESS);

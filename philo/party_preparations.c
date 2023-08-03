@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:38 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/07/29 22:39:39 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/03 04:15:52 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static t_return_value	prepare_philosopher(t_party	*party, unsigned int i)
 		= &party->forks[(i + 1) % party->number_of_philosophers];
 	party->philosophers[i].meal_count = 0; // TODO: replace with number_of_meals
 	party->philosophers[i].party = party;
-	if (pthread_mutex_init(&(party->philosophers[i].meal_update), NULL) != SUCCESS)
+	if (pthread_mutex_init(&(party->philosophers[i].meal_update), NULL)
+			!= SUCCESS)
 	 	return (MUTEX_FAIL);
 	return (SUCCESS);
 }
