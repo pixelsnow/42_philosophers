@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:37 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/04 21:28:05 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/04 21:39:37 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ void				*philosopher_routine(void *philosopher_data);
 void				*monitoring_routine(void *party_data);
 
 // cleanup.c
-void				free_memory(t_party *party);
-void				destroy_mutexes(t_party *party);
 t_return_value		handle_error(t_party *party, t_return_value ret_val);
 void				clean_up(t_party *party);
 

@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:38 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/04 21:27:01 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/04 21:33:51 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_return_value	prepare_philosopher(t_party	*party, unsigned int i)
 	return (SUCCESS);
 }
 
-t_return_value	allocate_memory(t_party *party)
+static t_return_value	allocate_memory(t_party *party)
 {
 	party->philosophers = malloc(sizeof(t_philosopher)
 			* party->number_of_philosophers);

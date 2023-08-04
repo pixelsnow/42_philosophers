@@ -6,13 +6,13 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:50 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/04 21:27:09 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/04 21:39:36 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	free_memory(t_party	*party)
+static void	free_memory(t_party	*party)
 {
 	if (party->philosophers)
 		free(party->philosophers);
@@ -20,7 +20,7 @@ void	free_memory(t_party	*party)
 		free(party->forks);
 }
 
-void	destroy_mutexes(t_party	*party)
+static void	destroy_mutexes(t_party	*party)
 {
 	unsigned int	i;
 
