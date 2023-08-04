@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:20 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/04 20:45:26 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/04 22:12:30 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ static unsigned long long	ascii_to_positive_int(const char *str)
 	return ((unsigned long long)result);
 }
 
-/**
- * Stores and validates an argument for the party configuration
- */
 static t_return_value	store_arg_if_validated(t_party *party, char *string,
 		int argument)
 {
