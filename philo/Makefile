@@ -6,7 +6,7 @@
 #    By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/29 21:32:50 by vvagapov          #+#    #+#              #
-#    Updated: 2023/07/29 21:33:00 by vvagapov         ###   ########.fr        #
+#    Updated: 2023/08/04 21:17:35 by vvagapov         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,10 +64,10 @@ thread_debug: all
 
 # Rule to compile with execution speed optimization
 optimized : CFLAGS += $(CFLAGS_OPTIMIZED)
-optimized : all 
+optimized : all
 
 #******************************************************************************#
-# Cleaning - Deletion														   #
+# Cleaning																	   #
 #******************************************************************************#
 
 clean:

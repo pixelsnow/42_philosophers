@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:12:20 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/03 04:28:04 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/04 20:45:26 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,5 @@ valid), max time allowed is %ld\n\n", MAX_TIME_ALLOWED);
 		}
 		i++;
 	}
-	//printf("time_to_die: %llu\n", party->time_to_die);
-	//printf("time_to_eat: %llu\n", party->time_to_eat);
-	//printf("time_to_sleep: %llu\n", party->time_to_sleep);
 	return (SUCCESS);
 }

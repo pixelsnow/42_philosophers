@@ -6,7 +6,7 @@
 /*   By: vvagapov <vvagapov@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:10:50 by vvagapov          #+#    #+#             */
-/*   Updated: 2023/08/03 05:30:58 by vvagapov         ###   ########.fr       */
+/*   Updated: 2023/08/04 21:27:09 by vvagapov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,15 @@ void	destroy_mutexes(t_party	*party)
 	while (i < party->number_of_philosophers)
 	{
 		pthread_mutex_destroy(&(party->forks[i]));
-		pthread_mutex_destroy(&(party->philosophers[i].meal_update));
+		pthread_mutex_destroy(&(party->philosophers[i].meal_count_lock));
+		pthread_mutex_destroy(&(party->philosophers[i].time_last_ate_lock));
 		i++;
 	}
 	pthread_mutex_destroy(&(party->guard));
-	pthread_mutex_destroy(&(party->dying));
+	pthread_mutex_destroy(&(party->party_over_lock));
 }
 
-t_return_value	quit_gracefully(t_party *party, t_return_value	ret_val)
+t_return_value	handle_error(t_party *party, t_return_value	ret_val)
 {
 	if (ret_val == MALLOC_FAIL)
 	{
@@ -48,8 +49,7 @@ t_return_value	quit_gracefully(t_party *party, t_return_value	ret_val)
 	}
 	else if (ret_val == THREAD_FAIL)
 	{
-		// no, it can't be done here because we don't know the last index, or does it matter?
-		join_philosopher_threads(party, party->number_of_philosophers);
+		join_philosopher_threads(party);
 		join_monitoring_thread(party);
 	}
 	return (ret_val);
