@@ -4,7 +4,7 @@
 
 My version of **philosophers** School 42 project @ [Hive Helsinki](https://www.hive.fi/en/)
 
-This project is a take on the [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem) using threads and mutexes.
+This project is a take on the [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem) using multithreading. The idea is to get comfortable working with threads and mutexes and explore the challenges of synchronisation. 
 
 ## Dining Philosophers Problem
 
